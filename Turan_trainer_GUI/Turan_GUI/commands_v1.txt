@@ -1,0 +1,50 @@
+0-fejemel.wav;Fej emel
+1-fejsullyeszt.wav;Fej süllyeszt
+2-labemel.wav;Láb emel
+3-labsullyeszt.wav;Láb süllyeszt
+4-mindenemel.wav;Mindent emel
+5-mindensullyeszt.wav;Mindent süllyeszt
+6-bezar.wav;Bezár
+*
+0-agy.wav;Ágy
+1-diktafon.wav;Diktafon
+2-homerseklet.wav;Hőmérséklet
+3-noverhivoharom.wav;Nővérhívó
+4-paratartalom.wav;Páratartalom
+5-radio.wav;Rádió
+6-telefon.wav;Telefon
+7-televizio.wav;Televízió
+*
+0-felvetel.wav;Felvétel
+1-megallit.wav;Megállít
+2-szunet.wav;Szünet
+3-lejatszas.wav;Lejátszás
+4-elozo.wav;Előző
+5-kovetkezo.wav;Következő
+6-torol.wav;Töröl
+7-vissza.wav;Vissza
+8-bezar.wav;Bezár
+*
+0-bezar.wav;Bezár
+1-csokkent.wav;Csökkent
+2-elozo.wav;Előző
+3-kovetkezo.wav;Következő
+4-leallit.wav;Leállít
+5-lejatszas.wav;Lejátszás
+6-novel.wav;Növel
+*
+0-bezar.wav;Bezár
+1-elozo.wav;Előző
+2-fogad.wav;Fogad
+3-hivas.wav;Hívás
+4-kovetkezo.wav;Következő
+5-letesz.wav;Letesz
+*
+0-csokkent.wav;Csökkent
+1-elozo.wav;Előző
+2-kikapcsol.wav;Kikapcsol
+3-kovetkezo.wav;Következő
+4-hangerofel.wav;Hangerő fel
+*
+0-igen.wav;Rendben
+1-nem.wav;Mégse

@@ -1,0 +1,2 @@
+default;Teszt Elek
+default16k;Teszt Elek 16k

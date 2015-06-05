@@ -1,0 +1,149 @@
+/*****
+	 * after all items in a column are calculated, this variable contains the minimum
+	 * distance value in the current column
+	 *****/
+	column_min_dist = float_max;
+
+	
+	/***** fill actual DTW matrix column */
+	
+	if (pos == 0) /***** at pos == 0, we initialize the first matrix column */
+	{
+	  /***** initialize current DTW matrix column, i.e. set all values to 'infinity' */
+	
+	  for (k = 0; k < sample->length ; k++)
+	    sample->matrix[0][k] = float_max;
+	
+	  /***** ccalculate the first <sloppy_corner> items in the current column */
+	
+	  sample->matrix[0][0] = 2*euklid_distance(sample->data[0], frame);
+	  column_min_dist = sample->matrix[0][0]/((0+1)+(0+1));
+	
+	  for (i = 1; i < sloppy_corner ; i++)
+	  {
+	    sample->matrix[0][i] = sample->matrix[0][i-1] + euklid_distance(sample->data[i], frame);
+
+	    tmp_dist = sample->matrix[0][i]/((0+1)+(i+1));
+	    if (tmp_dist < column_min_dist)
+	      column_min_dist = tmp_dist;
+	  }
+	}
+	else if (pos == 1)
+	{
+	  /*****
+	   * at pos == 1, we use a special (shorter) warping function
+	   * as the history (of one matrix column) does not allow
+	   * for the application of the full warping function yet
+	   *****/
+	
+	  /***** initialize current DTW matrix column, i.e. set all values to 'infinity' */
+	
+	  for (k = 0; k < sample->length ; k++)
+	    sample->matrix[1][k] = float_max;
+	
+	  /***** calculate the first <sloppy_corner+1> elements */
+	
+	  sample->matrix[1][0] = sample->matrix[0][0] + euklid_distance(sample->data[0], frame);
+	  column_min_dist = sample->matrix[1][0]/((1+1)+(0+1));
+	
+	  sample->matrix[1][1] = MIN3(sample->matrix[0][1] + act_dist,
+				      sample->matrix[1][0] + act_dist,
+				      sample->matrix[0][0] + 2*act_dist);
+
+	  tmp_dist = sample->matrix[1][1]/((1+1)+(1+1));
+	  if (tmp_dist < column_min_dist)
+	    column_min_dist = tmp_dist;
+	
+	  for (i = 2; i < sloppy_corner+1 ; i++)
+	  {
+	    act_dist = euklid_distance(sample->data[i], frame);
+	
+	    sample->matrix[1][i] = MIN3(sample->matrix[0][i]   + act_dist,
+					sample->matrix[0][i-1] + 2*act_dist,
+					sample->matrix[0][i-2] +
+					2*euklid_distance(sample->data[i-1], frame) + act_dist);
+
+	    tmp_dist = sample->matrix[1][i]/((1+1)+(i+1));
+	    if (tmp_dist < column_min_dist)
+	      column_min_dist = tmp_dist;
+	  }
+	}
+	else if (pos > 1)
+	{
+	  /*****
+	   * beyond pos == 1, the warping function lies inside the matrix
+	   * and can be calculated completely.
+	   *****/
+
+	  /***** initialize current DTW matrix column, i.e. set all values to 'infinity' */
+	
+	  for (k = 0; k < sample->length ; k++)
+	    sample->matrix[pos%3][k] = float_max;
+	
+	  /***** take care of sloppy start */
+	
+	  if (pos < sloppy_corner) /***** element in first row of DTW matrix */
+	  {
+	    sample->matrix[pos%3][0] = sample->matrix[(pos-1)%3][0] + euklid_distance(sample->data[0], frame);
+	    column_min_dist = sample->matrix[pos%3][0]/((pos+1)+(0+1));	
+	  }
+	  if (pos < sloppy_corner+1) /***** element in second row of DTW matrix */
+	  {
+	    act_dist = euklid_distance(sample->data[1], frame);
+	
+	    /***** use a simpler, smaller warping function that fits into the DTW matrix */
+	
+	    sample->matrix[pos%3][1] = MIN3(sample->matrix[pos%3][0]     + act_dist,
+					    sample->matrix[(pos-1)%3][0] + 2*act_dist,
+					    sample->matrix[(pos-2)%3][0] +
+					    2* euklid_distance(sample->data[1], last_frame) + act_dist);
+
+	    tmp_dist = sample->matrix[pos%3][1]/((pos+1)+(1+1));
+	    if (tmp_dist < column_min_dist)
+	      column_min_dist = tmp_dist;
+	  }
+	
+	  /*****
+	   * loop rows in current DTW column within
+	   * - range of adjust_window,
+	   * - range of warping function
+	   * - sample length
+	   *****/
+	
+	  for (j = MAX3(2, pos-adjust_window_width, (pos-2)/2); j < MIN3(sloppy_corner+1+(pos-1)*2,
+									 sample->length,
+									 pos+adjust_window_width); j++)
+	  {
+	    act_dist = euklid_distance(sample->data[j], frame);
+	
+	    /*****
+	     * apply warping function to calculate current DTW matrix element
+	     * (see server.h for description of warping function)
+	     *****/
+	
+	    if (sample->matrix[(pos-1)%3][j-1] < float_max ||
+		sample->matrix[(pos-1)%3][j-2] < float_max ||
+		sample->matrix[(pos-2)%3][j-1] < float_max)
+	    {
+	      sample->matrix[pos%3][j] = MIN3(sample->matrix[(pos-1)%3][j-1] + 2*act_dist,
+					      sample->matrix[(pos-1)%3][j-2] +
+					      2*euklid_distance(sample->data[j-1], frame) + act_dist,
+					      sample->matrix[(pos-2)%3][j-1] +
+					      2*euklid_distance(sample->data[j], last_frame) + act_dist);
+
+	      tmp_dist = sample->matrix[pos%3][j]/((pos+1)+(j+1));
+	      if (tmp_dist < column_min_dist)
+		column_min_dist = tmp_dist;
+	    }
+	    else
+	      sample->matrix[pos%3][j] = float_max;
+	  }
+
+	  /*****
+	   * if the minimum distance in the current row exceeds the
+	   * overall threshold, deactivate this sample utterance!
+	   *****/
+
+	  if (column_min_dist > score_threshold)
+	  {
+	    model->direct[samp]->isActive = 0; /***** deactivate sample */ 

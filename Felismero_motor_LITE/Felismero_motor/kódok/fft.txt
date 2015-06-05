@@ -1,0 +1,41 @@
+  public static float[] FFT(float[] iF,UInt32 iOffset)
+        {
+            FFTLib.Fourier fourier=new FFTLib.Fourier();
+            float[] buf;
+            buf = fourier.DoFFT(iF, iOffset, FFT_Samples);
+            ArrayABS(ref buf);
+            return buf;
+        }
+
+
+
+
+UInt32 pos;
+
+float[] globDiffArr = new float[MathLib.FFT_Samples];
+float[] ft1 = MathLib.FFT(data1, pos);
+
+
+
+
+
+
+
+            switch (cbFFTQual.SelectedIndex)
+            {
+                case 0:
+                    MathLib.SetQuality(MathLib.FFT_Quality.Low);
+                    break;
+                case 1:
+                    MathLib.SetQuality(MathLib.FFT_Quality.Average);
+                    break;
+                case 2:
+                    MathLib.SetQuality(MathLib.FFT_Quality.Good);
+                    break;
+                case 3:
+                    MathLib.SetQuality(MathLib.FFT_Quality.Best); ;
+                    break;
+                default:
+                    MathLib.SetQuality(MathLib.FFT_Quality.Average);
+                    break;
+            }

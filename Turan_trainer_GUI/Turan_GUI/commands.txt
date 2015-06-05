@@ -1,0 +1,14 @@
+0-fejemel.wav;Fej emel
+1-fejsullyeszt.wav;Fej süllyeszt
+2-labemel.wav;Láb emel
+3-labsullyeszt.wav;Láb süllyeszt
+6-bezar.wav;Bezárom
+*
+0-agy.wav;Ágyvezérlés
+3-noverhivoharom.wav;Nővérhívó
+5-radio.wav;Internetrádió
+6-telefon.wav;Telefonálás
+7-televizio.wav;Televízió
+*
+0-igen.wav;Megerősítés
+1-nem.wav;Kilépés

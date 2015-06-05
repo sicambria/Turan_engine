@@ -1,0 +1,429 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using Turan_SC;
+using System.IO;
+//using NAudio;
+//using NAudio.Mixer;
+//using NAudio.Wave;
+//using System.Diagnostics;
+//using VoiceRecorder.Audio;
+
+namespace Turan_GUI
+{
+
+    public partial class Train : Form
+    {
+        #region Variables Declaration
+
+        Turan_SC.Recording trec;
+        private delegate void SetGUI();
+        static string working_dir_dat = Application.StartupPath + @"\dat\";
+        static string commandlist_fname = "commands.txt";
+        double[] volumeArray = new double[80];
+        int vol_arr_index = 0;
+
+
+        List<string> numbersToTrain;
+
+        static string[,] wordsToTrain = new string[50, 2]; // MAX 50 commands
+
+        //List<FileNameStruct> wordsToTrain;
+        //List<string[,]> filenames;
+
+
+        public enum CommandType
+        {
+            number,
+            command,
+            confirm,
+            custom
+        }
+
+        #endregion
+
+        public Train()
+        {
+            InitializeComponent();
+            Directory.CreateDirectory(working_dir_dat);
+            numbersToTrain = FillNumberList();
+            //filenames = FillAALCommandFileNameList();
+
+            if (trec == null)
+            {
+                trec = new Turan_SC.Recording();
+                trec.TurnOffAndSave();
+                trec.AudioEventDetected += new Recording.AudioEventDetectedHandler(soundDetected);
+            }
+
+            volumeTrackerTimer.Enabled = true;
+        }
+
+        List<string> FillNumberList()
+        {
+            List<string> numList = new List<string>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                numList.Add(i.ToString() + ".wav");
+            }
+
+            return numList;
+        }
+
+        //List<string[,]> FillAALCommandFileNameList()
+        string[,] FillAALCommandFileNameList()
+        {
+            //List<string> aalCommands = new List<string>();
+            string[,] aalFileNames = new string[30, 2];
+
+
+
+
+
+
+            //aalFileNames.Add("0-agy.wav");
+            //aalFileNames.Add("1-diktafon.wav");
+            //aalFileNames.Add("2-homerseklet.wav");
+            //aalFileNames.Add("3-noverhivoharom.wav");
+            //aalFileNames.Add("4-paratartalom.wav");
+            //aalFileNames.Add("5-radio.wav");
+            //aalFileNames.Add("6-telefon.wav");
+            //aalFileNames.Add("7-televizio.wav");
+
+
+            //aalFileNames.Add("0-fejemel.wav");
+            //aalFileNames.Add("1-fejsullyeszt.wav");
+            //aalFileNames.Add("2-labemel.wav");
+            //aalFileNames.Add("3-labsullyeszt.wav");
+            //aalFileNames.Add("4-mindenemel.wav");
+            //aalFileNames.Add("5-mindensullyeszt.wav");
+            //aalFileNames.Add("6-bezar.wav");
+
+            //aalFileNames.Add("0-felvetel.wav");
+            //aalFileNames.Add("1-megallit.wav");
+            //aalFileNames.Add("2-szunet.wav");
+            //aalFileNames.Add("3-lejatszas.wav");
+            //aalFileNames.Add("4-elozo.wav");
+            //aalFileNames.Add("5-kovetkezo.wav");
+            //aalFileNames.Add("6-torol.wav");
+            //aalFileNames.Add("7-vissza.wav");
+            //aalFileNames.Add("8-bezar.wav");
+
+
+
+            //aalFileNames.Add("elozo.wav");
+
+
+
+            return aalFileNames;
+        }
+
+
+
+        private void ActivateRecording()
+        {
+
+            btn_rec_start.Text = "Felvétel hangra indul";
+            toolStripStatusLabel1.Text = "Felvétel hangra indul";
+            btn_rec_start.BackColor = Color.Green;
+            lab_speaktomic.Visible = true;
+            trec.TurnOnAndSave();
+
+
+            //if (trec == null)
+            //{
+            //    trec = new Turan_SC.Recording();
+            //    trec.AudioEventDetected += new Recording.AudioEventDetectedHandler(soundDetected);
+            //}
+
+            //volumeTrackerTimer.Enabled = true;
+
+        }
+
+
+        public void soundDetected()
+        {
+            lab_speaktomic.Invoke(new SetGUI(GUIMuvelet));
+
+            //try
+            //{
+            //pb_cover.Invoke(new SetGUI(GUIMuvelet));
+            //}
+            //catch (Exception) { }
+
+        }
+
+
+        private void GUIMuvelet()
+        {
+            lab_speaktomic.Visible = false;
+            toolStripStatusLabel1.Text = DateTime.Now.ToString();
+            btn_rec_start.Text = "Újra felvesz";
+        }
+
+        private void szalMuveletVegzo(string message)
+        {
+
+        }
+
+        private void Train_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (trec != null)
+            {
+                trec.stopRecording();
+            }
+        }
+
+        private void btn_rec_start_Click(object sender, EventArgs e)
+        {
+            ActivateRecording();
+        }
+
+        private void btn_home_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Megszakítsuk a tanítást?", "Megerősítés", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                this.Dispose();
+            }
+
+        }
+
+
+
+        private void volumeTrackerTimer_Tick(object sender, EventArgs e)
+        {
+            label2.Text = trec.GetCurrentAmplitude().ToString();
+            //bar_rec_volume.Value = (int)trec.GetCurrentAmplitude();
+            if (vol_arr_index < volumeArray.Length)
+            {
+                volumeArray[vol_arr_index++] = (int)trec.GetCurrentAmplitude();
+            }
+            else
+            {
+                double sum_amp = 0.0;
+                for (int i = 0; i < volumeArray.Length; i++)
+                {
+                    sum_amp += volumeArray[i];
+                }
+                vol_arr_index = 0;
+                int avg_amp = (int)(sum_amp / volumeArray.Length);
+                bar_rec_volume.Value = avg_amp;
+                label3.Text = (sum_amp / volumeArray.Length).ToString();
+
+
+                if (avg_amp < 500)
+                {
+                    lab_vol_ok.Text = ""; //halk
+                }
+                else if (avg_amp > 2000)
+                {
+                    lab_vol_ok.Text = ""; //hangos
+                }
+                else
+                {
+                    lab_vol_ok.Text = "rendben";
+                }
+
+            }
+
+        }
+
+        private void Train_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                TextReader commands = new StreamReader(commandlist_fname);
+                //TextReader targyak = new StreamReader(open_txt.FileName);
+
+                int index = 0;
+                string temp = "";
+                string[] temp2 = new string[2];
+
+                while (commands.Peek() >= 0)
+                {
+                    temp = commands.ReadLine();
+                    temp2 = temp.Split(';');
+
+                    wordsToTrain[index, 0] = temp2[0]; // filename
+                    wordsToTrain[index, 1] = temp2[1]; // description
+                    index++;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+    }
+}
+
+
+
+
+//----------------------------------
+
+
+
+
+//WaveIn waveIn;
+//SampleAggregator sampleAggregator;
+//UnsignedMixerControl volumeControl;
+//double desiredVolume = 100;
+//RecordingState recordingState;
+//WaveFileWriter writer;
+//WaveFormat recordingFormat;
+
+//public event EventHandler Stopped = delegate { };
+
+//public void AudioRecorder()
+//{
+//    sampleAggregator = new SampleAggregator();
+//    RecordingFormat = new WaveFormat(8000, 1);
+//}
+
+//public WaveFormat RecordingFormat
+//{
+//    get
+//    {
+//        return recordingFormat;
+//    }
+//    set
+//    {
+//        recordingFormat = value;
+//        sampleAggregator.NotificationCount = value.SampleRate / 10;
+//    }
+//}
+
+//public void BeginMonitoring(int recordingDevice)
+//{
+//    if (recordingState != RecordingState.Stopped)
+//    {
+//        throw new InvalidOperationException("Can't begin monitoring while we are in this state: " + recordingState.ToString());
+//    }
+//    waveIn = new WaveIn();
+//    waveIn.DeviceNumber = recordingDevice;
+//    //waveIn.DataAvailable += waveIn_DataAvailable;
+//    waveIn.RecordingStopped += new EventHandler(waveIn_RecordingStopped);
+//    waveIn.WaveFormat = recordingFormat;
+//    waveIn.StartRecording();
+//    TryGetVolumeControl();
+//    recordingState = RecordingState.Monitoring;
+//}
+
+//void waveIn_RecordingStopped(object sender, EventArgs e)
+//{
+//    recordingState = RecordingState.Stopped;
+//    writer.Dispose();
+//    Stopped(this, EventArgs.Empty);
+//}
+
+//public void BeginRecording(string waveFileName)
+//{
+//    if (recordingState != RecordingState.Monitoring)
+//    {
+//        throw new InvalidOperationException("Can't begin recording while we are in this state: " + recordingState.ToString());
+//    }
+//    writer = new WaveFileWriter(waveFileName, recordingFormat);
+//    recordingState = RecordingState.Recording;
+//}
+
+//public void Stop()
+//{
+//    if (recordingState == RecordingState.Recording)
+//    {
+//        recordingState = RecordingState.RequestedStop;
+//        waveIn.StopRecording();
+//    }
+//}
+
+//private void TryGetVolumeControl()
+//{
+//    int waveInDeviceNumber = waveIn.DeviceNumber;
+//    if (Environment.OSVersion.Version.Major >= 6) // Vista and over
+//    {
+//        var mixerLine = new MixerLine((IntPtr)waveInDeviceNumber, 0, MixerFlags.WaveIn);
+//        foreach (var control in mixerLine.Controls)
+//        {
+//            if (control.ControlType == MixerControlType.Volume)
+//            {
+//                volumeControl = control as UnsignedMixerControl;
+//                MicrophoneLevel = desiredVolume;
+//                break;
+//            }
+//        }
+//    }
+//    else
+//    {
+//        var mixer = new Mixer(waveInDeviceNumber);
+//        foreach (var destination in mixer.Destinations)
+//        {
+//            if (destination.ComponentType == MixerLineComponentType.DestinationWaveIn)
+//            {
+//                foreach (var source in destination.Sources)
+//                {
+//                    if (source.ComponentType == MixerLineComponentType.SourceMicrophone)
+//                    {
+//                        foreach (var control in source.Controls)
+//                        {
+//                            if (control.ControlType == MixerControlType.Volume)
+//                            {
+//                                volumeControl = control as UnsignedMixerControl;
+//                                MicrophoneLevel = desiredVolume;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+//}
+
+//public double MicrophoneLevel
+//{
+//    get
+//    {
+//        return desiredVolume;
+//    }
+//    set
+//    {
+//        desiredVolume = value;
+//        if (volumeControl != null)
+//        {
+//            volumeControl.Percent = value;
+//        }
+//    }
+//}
+
+
+
+
+//public class FileNameStruct
+//{
+//    string filename;
+//    string name;
+
+//    public FileNameStruct(string filename, string name)
+//    {
+//        this.filename = filename;
+//        this.name = name;
+//    }
+
+//}
+
+
+//struct FileList
+//{            
+//    string filename;
+//    string name;
+
+//}

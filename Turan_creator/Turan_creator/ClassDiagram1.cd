@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Turan_creator.HTK_Interface">
+    <Position X="5.5" Y="4" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAABAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>HTK_Interface.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SoundAnalysis.FftAlgorithm" Collapsed="true">
+    <Position X="14.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAQAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>FftCalc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Turan_creator.Creator" Collapsed="true">
+    <Position X="14.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAABAAAoAAAAAAAhAAyEKAAJAQAAAABBQEAYAA=</HashCode>
+      <FileName>Creator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Turan_creator.CV_FELDOLGOZO" Collapsed="true">
+    <Position X="16" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAgAAAAAAAAAAABgQAAAAAICFCAAAABAA=</HashCode>
+      <FileName>CV_FELDOLGOZO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Turan_creator.H_FELDOLGOZO" Collapsed="true">
+    <Position X="16" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAQAHAAA0AAoAgQACCAIAAAABEAgAABAAIEAAQAQAA=</HashCode>
+      <FileName>H_FELDOLGOZO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VorbisSharp.Drft" Collapsed="true">
+    <Position X="17.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQAgCEIAAAAgAIABAAEAAAAAAAAAAIAEKCABAAQAAQ=</HashCode>
+      <FileName>Drft.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VorbisSharp.Lpc" Collapsed="true">
+    <Position X="14.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEIAAAEAAAAAQAIAAAAAAAAAAAAAAAIAAgAAAAAAAAA=</HashCode>
+      <FileName>Lpc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFile" Collapsed="true">
+    <Position X="16" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCAEEIQCEwKEYIZgRIAEMAQCZBYZEkQBICQAhNCEKOA=</HashCode>
+      <FileName>WAVFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileException" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileAudioMergeException" Collapsed="true">
+    <Position X="9.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileReadException" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileWriteException" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileIOException" Collapsed="true">
+    <Position X="5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileBitsPerSampleException" Collapsed="true">
+    <Position X="7.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAEAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileSampleRateException" Collapsed="true">
+    <Position X="11.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="SoundAnalysis.ComplexNumber" Collapsed="true">
+    <Position X="14.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQCAAAAgAMYBEAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>ComplexNumber.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="EricOulashin.WAVFormat" Collapsed="true">
+    <Position X="16" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAACAAAAAAAggAAAAAAAAAAAAoAAAAQAAEAAAiA=</HashCode>
+      <FileName>WAVFormat.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

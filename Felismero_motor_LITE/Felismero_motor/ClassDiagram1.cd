@@ -1,0 +1,780 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Felismero_motor.CV_FELDOLGOZO">
+    <Position X="6.75" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAgAAAAAAAAAAABgQAAAAAICFCAAAABAA=</HashCode>
+      <FileName>CV_FELDOLGOZO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Felismero_motor.FMOD_FUNCTIONS">
+    <Position X="10.75" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIACAAAAAAAQAAAAUAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>FMOD_FUNCTIONS.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Felismero_motor.Form1">
+    <Position X="4.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>tpSIIQLwAzfI4zTOAODcvpFjEiL8IRUmMiaYOW1YHcE=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Felismero_motor.H_FELDOLGOZO">
+    <Position X="9" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAHAAA0IAgCgQAACAIAAQABAAgAABEAIEAAQAQAA=</HashCode>
+      <FileName>H_FELDOLGOZO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Felismero_motor.Program" Collapsed="true">
+    <Position X="14.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.VERSION" Collapsed="true">
+    <Position X="14.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.DELAYTYPE_UTILITY" Collapsed="true">
+    <Position X="19.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACABAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.PRESET" Collapsed="true">
+    <Position X="24.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAFAgACKECBQACJSEQEAgAAgAAAQAIQiBAAwCESABA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.Factory" Collapsed="true">
+    <Position X="14.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.Memory" Collapsed="true">
+    <Position X="23" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.System" Collapsed="true">
+    <Position X="24.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>fKH5zNL+CvbkA1qBHxGO0i7V70Gf15tQ6aJreXhUxT4=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.Sound" Collapsed="true">
+    <Position X="21.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MyBYSrEIILAkJiojAYKGcAJgJgAEAKEC7iQFQIUAJCI=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.Channel" Collapsed="true">
+    <Position X="14.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BiBi6HIuQMRIQyrepQPkEFNi6ckqlu4mophVh+IwZTY=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.ChannelGroup" Collapsed="true">
+    <Position X="16" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>sLTABAIIAIYCowhoQZVBARogKEQiMqsQoQoNjAAAAiA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.SoundGroup" Collapsed="true">
+    <Position X="23" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kDAIAgAOASAQACAAAQAAEAIAAAKgQIaAgYgEiAgEQCA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.DSP" Collapsed="true">
+    <Position X="21.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>0KJAABGMDGCGAIQUoQAAhJMCwUiEgoAAAAFEQQAJGCA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.DSPConnection" Collapsed="true">
+    <Position X="23" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EDACAAEIACAAIBkAABEAARIAAAAAAIAAAAAgAAQAACA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.Geometry" Collapsed="true">
+    <Position X="19.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kCQBsoIMAACgAAEAAAUIAAICCAAkAIICAQAIAAAoCGA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.Reverb" Collapsed="true">
+    <Position X="17.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>sjAAAAAIAAiAAAAAAEQAQAMAAAACAIAAAAAAEARBKCA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMOD.Error" Collapsed="true">
+    <Position X="24.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_errors.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Felismero_motor.Properties.Settings" Collapsed="true">
+    <Position X="19.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAEAAAABAAAAAGAIAIAAAABAEAAAAAAAAgKAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFile" Collapsed="true">
+    <Position X="16" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCAEEIQCEwKEYIZgRIAEMAQCZBYZEkQBICQAhNCEKOA=</HashCode>
+      <FileName>WAVFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileException" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileAudioMergeException" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileReadException" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileWriteException" Collapsed="true">
+    <Position X="5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileIOException" Collapsed="true">
+    <Position X="7.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileBitsPerSampleException" Collapsed="true">
+    <Position X="9.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAEAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EricOulashin.WAVFileSampleRateException" Collapsed="true">
+    <Position X="11.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>WAVFileExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VorbisSharp.Lpc">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEIAAAEAAAAAQAYAAAAAAAIAAAAAAAIAAgAAAAAAAAA=</HashCode>
+      <FileName>Lpc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Felismero_motor.lpcData">
+    <Position X="7" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAACAAEAAgAAEAQAAAAAAAIAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>lpcData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Felismero_motor.dtwApp_match">
+    <Position X="9" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACACAFAAhkEAgCBBEgAAgQIQAICAAAACAAAAQABAiiA=</HashCode>
+      <FileName>dtwApp_match.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SoundAnalysis.FftAlgorithm">
+    <Position X="2.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAQAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>FftCalc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="FMOD.VECTOR" Collapsed="true">
+    <Position X="24.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAQAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.GUID" Collapsed="true">
+    <Position X="24.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAACAQAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.TAG" Collapsed="true">
+    <Position X="23" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAFAEAAAAAQAEAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.CDTOC" Collapsed="true">
+    <Position X="16" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAYAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.CREATESOUNDEXINFO" Collapsed="true">
+    <Position X="17.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQIgEASBACCIQQEGAArAACIAAQCgQAAAEQQAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.REVERB_PROPERTIES" Collapsed="true">
+    <Position X="21.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAFBACABAAAAiBCBgAEAlBAAAAIAAAQAAAABIQDAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.REVERB_FLAGS" Collapsed="true">
+    <Position X="19.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEABAAAAAAAIBAAAAAAgCAAAAAAAAgAAAIAAAAQA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.REVERB_CHANNELPROPERTIES" Collapsed="true">
+    <Position X="17.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACjAAQABAQAAoACBAIAIAAAAAAAAgAAAQAAAAACQE=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.REVERB_CHANNELFLAGS" Collapsed="true">
+    <Position X="16" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAgAQAQAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.ADVANCEDSETTINGS" Collapsed="true">
+    <Position X="14.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAABACAAJgAEIhwAAAAJAAAAAAAACQAAIJgA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.DSP_PARAMETERDESC" Collapsed="true">
+    <Position X="21.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEgAAAAAQABAAIAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.DSP_DESCRIPTION" Collapsed="true">
+    <Position X="19.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAASACAkAAAAAAAAACAAAEAIAAAFCggAAABQAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.DSP_STATE" Collapsed="true">
+    <Position X="23" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAABQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FMOD.MEMORY_USAGE_DETAILS" Collapsed="true">
+    <Position X="14.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BJKAAADAAgBIIAOAAAGAJAGCiBUGECEARUICSAQAAYA=</HashCode>
+      <FileName>fmod_memoryinfo.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="EricOulashin.WAVFormat" Collapsed="true">
+    <Position X="14.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAACAAAAAAAggAAAAAAAAAAAAoAAAAQAAEAAAiA=</HashCode>
+      <FileName>WAVFormat.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="FMOD.RESULT" Collapsed="true">
+    <Position X="24.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BERGIcAkKA8EgGkYEQAaFcEeAABYjRSqSwWFOPR0iBg=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.OUTPUTTYPE" Collapsed="true">
+    <Position X="21.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAIBATAQgBIAAAAAgQgAABEAAAAAgEAAAAAAAABABAE=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.CAPS" Collapsed="true">
+    <Position X="14.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAQAAAAAQAUAAAAAAACAgBAFQCAABAECAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DEBUGLEVEL" Collapsed="true">
+    <Position X="19.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAJACAAAQAEAAAEAAKQAAASCAAAEAhAACAAAAAAAI=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.MEMORY_TYPE" Collapsed="true">
+    <Position X="16" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACCACAAAAAAAAQAAAAAAAgAAAAAAAAAAAABA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.SPEAKERMODE" Collapsed="true">
+    <Position X="23" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEgABACAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAECCAI=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.SPEAKER" Collapsed="true">
+    <Position X="19.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAgAAAAQAAAAEAIBAgAAAAAAIAAAAIAAIIAAAI=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.PLUGINTYPE" Collapsed="true">
+    <Position X="23" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAAAAACAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.INITFLAGS" Collapsed="true">
+    <Position X="24.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AMAAAACEAmAIAAAAAAABwAABUAAABQABBACAQAEAACA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.SOUND_TYPE" Collapsed="true">
+    <Position X="16" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAoBhABBBQIABABAAAAAKAABAAAAAEABAAAAAAAFoA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.SOUND_FORMAT" Collapsed="true">
+    <Position X="14.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAhAAAAACAAQBAQAQAKAAIAAAAAAAAAAIAQAAQAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.MODE" Collapsed="true">
+    <Position X="17.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAjEAAiBwAAAAAAAAACIAAgAQgAABAKAoACBCABEAkE=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.OPENSTATE" Collapsed="true">
+    <Position X="19.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAABAAAAAIAAAAACAIAAAQAAAAACAAAAAgAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.SOUNDGROUP_BEHAVIOR" Collapsed="true">
+    <Position X="17.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAQAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.SYSTEM_CALLBACKTYPE" Collapsed="true">
+    <Position X="24.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIBAAAAAAAAAAAQAAAAAAAAAAAAABAAAQEAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.CHANNEL_CALLBACKTYPE" Collapsed="true">
+    <Position X="16" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAACAAAgAAAAAAAAAAAAAQAAAQ=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_FFT_WINDOW" Collapsed="true">
+    <Position X="19.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAADAAAAAAAQAAAAAAAQAAAAAAAAAAAgAAAAgAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_RESAMPLER" Collapsed="true">
+    <Position X="14.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAQAAEAAAAAAAIAAAAAAAAAAAACAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.TAGTYPE" Collapsed="true">
+    <Position X="16" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAEABAIAAADAAAAQACAAAAAAAEAAAAAAAAAFAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.TAGDATATYPE" Collapsed="true">
+    <Position X="14.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECAAAAAAAAAAAAAAAQAABAAAAAAIAAgEAAAAAAAgAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DELAYTYPE" Collapsed="true">
+    <Position X="21.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAIBAAAAAAAAAAAgAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.TIMEUNIT" Collapsed="true">
+    <Position X="17.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIBAAAgAAAAAMCAIAAAAACQAECQAAQAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.SPEAKERMAPTYPE" Collapsed="true">
+    <Position X="21.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAQAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.CHANNELINDEX" Collapsed="true">
+    <Position X="17.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_TYPE" Collapsed="true">
+    <Position X="21.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAgADACGAAAAgEAACoICAAAAAAAEFAQIAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_OSCILLATOR" Collapsed="true">
+    <Position X="21.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_LOWPASS" Collapsed="true">
+    <Position X="16" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_ITLOWPASS" Collapsed="true">
+    <Position X="14.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_HIGHPASS" Collapsed="true">
+    <Position X="23" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_ECHO" Collapsed="true">
+    <Position X="17.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAGAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_DELAY" Collapsed="true">
+    <Position X="14.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAD4CQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_FLANGE" Collapsed="true">
+    <Position X="21.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAACAAABAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_TREMOLO" Collapsed="true">
+    <Position X="19.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAACAIAAAAAAAAAQAAAgEAAAAAAIIA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_DISTORTION" Collapsed="true">
+    <Position X="16" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_NORMALIZE" Collapsed="true">
+    <Position X="19.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAABAAACAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_PARAMEQ" Collapsed="true">
+    <Position X="23" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_PITCHSHIFT" Collapsed="true">
+    <Position X="24.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAEAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_CHORUS" Collapsed="true">
+    <Position X="23" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAADgAAACAAAAAACAAABAAAAAAEgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_REVERB" Collapsed="true">
+    <Position X="16" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAEAAAAAAAAAAAAAQEAAAIAAAAAAAAAIA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_ITECHO" Collapsed="true">
+    <Position X="24.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAgABAAAAAAYAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_COMPRESSOR" Collapsed="true">
+    <Position X="24.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAggAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_SFXREVERB" Collapsed="true">
+    <Position X="17.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAgQAAAAAAQAAAAARQACAAICAQQAAAAAQAQAEA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.DSP_LOWPASS_SIMPLE" Collapsed="true">
+    <Position X="17.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.MEMBITS" Collapsed="true">
+    <Position X="14.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAhCCAAAABAgBAAAAAhAAACAACAAEAARCAQACAAAQ=</HashCode>
+      <FileName>fmod_memoryinfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FMOD.EVENT_MEMBITS" Collapsed="true">
+    <Position X="23" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQAAABCBAKBIggCAAIAiAARABAAIAIEAAAMCAEAAAoA=</HashCode>
+      <FileName>fmod_memoryinfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="FMOD.SYSTEM_CALLBACK" Collapsed="true">
+    <Position X="19.5" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAABAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.CHANNEL_CALLBACK" Collapsed="true">
+    <Position X="16" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.SOUND_NONBLOCKCALLBACK" Collapsed="true">
+    <Position X="14.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.SOUND_PCMREADCALLBACK" Collapsed="true">
+    <Position X="16" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.SOUND_PCMSETPOSCALLBACK" Collapsed="true">
+    <Position X="17.75" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAECAAAAAAAABA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.FILE_OPENCALLBACK" Collapsed="true">
+    <Position X="21.25" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAEAAAAAAAAAAECAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.FILE_CLOSECALLBACK" Collapsed="true">
+    <Position X="19.5" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.FILE_READCALLBACK" Collapsed="true">
+    <Position X="23" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.FILE_SEEKCALLBACK" Collapsed="true">
+    <Position X="24.75" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.CB_3D_ROLLOFFCALLBACK" Collapsed="true">
+    <Position X="14.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>fmod.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.DSP_CREATECALLBACK" Collapsed="true">
+    <Position X="17.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.DSP_RELEASECALLBACK" Collapsed="true">
+    <Position X="24.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.DSP_RESETCALLBACK" Collapsed="true">
+    <Position X="14.25" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.DSP_READCALLBACK" Collapsed="true">
+    <Position X="23" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAEAAAAAAAAAAEAAQCAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.DSP_SETPOSITIONCALLBACK" Collapsed="true">
+    <Position X="17.75" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.DSP_SETPARAMCALLBACK" Collapsed="true">
+    <Position X="16" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAABAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.DSP_GETPARAMCALLBACK" Collapsed="true">
+    <Position X="21.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAABAAAAAAAAAAAEAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FMOD.DSP_DIALOGCALLBACK" Collapsed="true">
+    <Position X="19.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAgAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>fmod_dsp.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
