@@ -131,6 +131,20 @@ namespace Felismero_motor
             set { totalCost = value; }
         }
 
+        // BUG-10: optional confidence-based rejection.
+        // Sentinel returned in RecogResult when the best match is too poor.
+        // Distinct from -1 (which means "no templates configured").
+        public const int REJECTED = -2;
+
+        // Reject when (best totalCost / signal frame count) exceeds this.
+        // Default +Infinity => rejection disabled => identical legacy behavior.
+        public static double RejectionThreshold = double.PositiveInfinity;
+
+        // Mean per-frame DTW cost of the winning template from the last
+        // bestMatch() call. Used to tune RejectionThreshold (FRR/FAR sweep).
+        private double bestNormalizedCost = double.PositiveInfinity;
+        public double BestNormalizedCost { get { return bestNormalizedCost; } }
+
         // url to store the audio file for the test signal
         // private URL audiofile = null;
 
@@ -144,7 +158,8 @@ namespace Felismero_motor
             //pathRecord = new int[num_of_templates][];
             //pathRecord = new int[num_of_templates, num_of_vectoritems];
             pathRecord = new int[num_of_templates, 1];
-            costRecord = new double[120];
+            // BUG-08: sized from actual signal length in backTrace(); no fixed 120-frame cap.
+            costRecord = null;
             pathLength = new int[num_of_templates];
             totalCost = new double[num_of_templates];
 
@@ -161,7 +176,8 @@ namespace Felismero_motor
             //pathRecord = new int[num_of_templates][];
             //pathRecord = new int[num_of_templates, num_of_vectoritems];
             pathRecord = new int[num_of_templates, 1];
-            costRecord = new double[120];
+            // BUG-08: sized from actual signal length in backTrace(); no fixed 120-frame cap.
+            costRecord = null;
             pathLength = new int[num_of_templates];
             totalCost = new double[num_of_templates];
 
@@ -234,7 +250,7 @@ namespace Felismero_motor
             int i;
             double dis = 0.0;
 
-            for (i = 0; i < num_of_vectoritems; i++)  //13
+            for (i = 0; i < frame1.Length; i++)   // BUG-01: live per-array width (60 HTK-MFCC / 48 HTK-LPC / 15-12 native); was stale class-load static num_of_vectoritems
             {
                 dis = dis + (frame1[i] - frame2[i]) * (frame1[i] - frame2[i]);
             }
@@ -256,31 +272,33 @@ namespace Felismero_motor
         // method to compute the Itakura distance between two vectors
         private double ITDDistance(double[] ar2, double[] ar1)
         {
-            double[] m2 = new double[13];  //13
-            double[] rf = new double[13];
-            double[] rf1 = new double[13];
+            // BUG-09: width derived from the live vector width (the array itself),
+            // not magic 13. NB: this is the coefficient COUNT N (= LPC order p + 1),
+            // not p itself. ar1/ar2 are equal-length, so ar1.Length == the live width.
+            int order = ar1.Length;
+
+            double[] m2 = new double[order];
+            double[] rf = new double[order];
+            double[] rf1 = new double[order];
             double k, d;
 
             int i, j;
 
-            //for (i = 0; i < 13; i++)
-            for (i = 0; i < 13; i++)
+            for (i = 0; i < order; i++)
             {
                 m2[i] = 0;
                 rf[i] = ar1[i];
             }
 
             //autocorrelation of ar2 (lpcar2ra)
-            //for (i = 0; i < 13; i++)
-            for (i = 0; i < 13; i++)
+            for (i = 0; i < order; i++)
             {
-                //for (j = 0; j < 13 - i; j++)
-                for (j = 0; j < 13 - i; j++)
+                for (j = 0; j < order - i; j++)
                     m2[i] += ar2[j] * ar2[i + j];
             }
 
             //reflection coefficients from ar1 (lpcar2rf)
-            for (j = 11; j > 0; j--)
+            for (j = order - 2; j > 0; j--)
             {
                 k = rf[j + 1];
                 d = 1.0 / (1.0 - k * k);
@@ -293,11 +311,10 @@ namespace Felismero_motor
             }
 
             // autocorrelation coefs from rf (lpcrf2rr)
-            double[] rr = new double[13];
-            double[] a = new double[13];
+            double[] rr = new double[order];
+            double[] a = new double[order];
             double sum;
-            //for (i = 0; i < 13; i++)
-            for (i = 0; i < 13; i++)
+            for (i = 0; i < order; i++)
             {
                 rr[i] = 0.0;
                 a[i] = 0.0;
@@ -307,7 +324,7 @@ namespace Felismero_motor
             rr[1] = -a[0];
             double e = a[0] * a[0] - 1.0;
 
-            for (i = 1; i < 12; i++)
+            for (i = 1; i < order - 1; i++)
             {
                 k = rf[i + 1];
                 sum = 0.0;
@@ -316,7 +333,7 @@ namespace Felismero_motor
 
                 rr[i + 1] = k * e - sum;
 
-                double[] aa = new double[13];
+                double[] aa = new double[order];
                 for (j = 0; j < i; j++)
                     aa[j] = a[j] + k * a[i - j - 1];
                 for (j = 0; j < i; j++)
@@ -326,23 +343,23 @@ namespace Felismero_motor
                 e = e * (1.0 - k * k);
             }
 
-            double[] ar = new double[13];
+            double[] ar = new double[order];
             ar[0] = 1.0;
-            for (i = 0; i < 12; i++)
+            for (i = 0; i < order - 1; i++)
                 ar[i + 1] = a[i];
 
             sum = 0.0;
-            for (i = 0; i < 13; i++)
+            for (i = 0; i < order; i++)
                 sum += rr[i] * ar[i];
 
             double r0 = 1.0 / sum;
 
-            for (i = 0; i < 13; i++)
+            for (i = 0; i < order; i++)
                 rr[i] *= r0;
 
             m2[0] *= 0.5;
             sum = 0.0;
-            for (i = 0; i < 13; i++)
+            for (i = 0; i < order; i++)
                 sum += rr[i] * m2[i];
             sum *= 2;
             sum = Math.Log10(sum);
@@ -463,8 +480,8 @@ namespace Felismero_motor
                         //double[] temp3 = new double[reference.data.GetUpperBound(1)]; // original
                         //double[] temp4 = new double[signal.data.GetUpperBound(1)];
 
-                        double[] temp3 = new double[H_FELDOLGOZO.mfcc_lpc_vect_num];
-                        double[] temp4 = new double[H_FELDOLGOZO.mfcc_lpc_vect_num];
+                        double[] temp3 = new double[reference.data.GetLength(1)]; // BUG-01: per-array width, never overruns
+                        double[] temp4 = new double[signal.data.GetLength(1)];    // BUG-01: per-array width, never overruns
 
 
                         //double[] temp3 = new double[H_FELDOLGOZO.num_items_in_windowed_frame];  //256 méretű temp double[]
@@ -533,6 +550,9 @@ namespace Felismero_motor
             int minY = 0;
             int[] temppath = new int[testlength + 1];
             int temppathlength = 0;
+
+            // BUG-08: size cost trace to the real signal length (frames), removing the 120-frame cap.
+            costRecord = new double[testlength];
 
             minX = testlength - 1;
             minY = reflength - 1;
@@ -613,7 +633,9 @@ namespace Felismero_motor
         public void bestMatch()
         {
             pathRecordList.Clear();
-            double temp = 10000.0;
+            recogResult = -1;                          // BUG-10: -1 now means ONLY "no templates"
+            double temp = double.PositiveInfinity;     // BUG-10: drop accidental 10000 reject cap;
+                                                       // normalized gate below is the sole reject authority
             for (templateIndex = 0; templateIndex < num_of_templates; templateIndex++)
             {
                 setReference(templateIndex);
@@ -633,6 +655,16 @@ namespace Felismero_motor
             if (recogResult != -1)
             {
                 reference = template[recogResult];
+
+                // BUG-10: normalized-cost rejection gate (opt-in).
+                int sigFrames = (signal != null) ? signal.getRowLength() : 0;
+                if (sigFrames <= 0) sigFrames = 1;            // avoid div-by-zero
+                bestNormalizedCost = totalCost[recogResult] / (double)sigFrames;
+
+                if (bestNormalizedCost > RejectionThreshold)
+                {
+                    recogResult = REJECTED;
+                }
             }
         }
 

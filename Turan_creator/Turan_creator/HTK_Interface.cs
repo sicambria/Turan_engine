@@ -68,37 +68,38 @@ namespace Turan_creator
 
                 #endregion
 
-                vector_array = new double[nSamples, num_of_feature_vectors];
+                // BUG-01: MFCC_D_A_T = static + Δ + ΔΔ + ΔΔΔ, four streams concatenated.
+                vector_array = new double[nSamples, 4 * num_of_feature_vectors];
 
                 //while (pos < length)
                 while (current_frame < nSamples)
                 {
 
-                    // MFCC - Mel-frequency cepstral coefficients
+                    // MFCC - static cepstral coefficients   -> columns [0 .. N-1]
                     for (int i = 0; i < num_of_feature_vectors; i++)
                     {
                         vector_array[current_frame, i] = BitConverter.ToSingle(b.ReadBytes(4), 0);
                         pos += sizeof(float);
                     }
 
-                    // D - Delta coefficients
+                    // D - Delta coefficients                -> columns [N .. 2N-1]
                     for (int i = 0; i < num_of_feature_vectors; i++)
                     {
-                        vector_array[current_frame, i] += BitConverter.ToSingle(b.ReadBytes(4), 0);
+                        vector_array[current_frame, num_of_feature_vectors + i] = BitConverter.ToSingle(b.ReadBytes(4), 0);
                         pos += sizeof(float);
                     }
 
-                    // A - Accelerator coefficients
+                    // A - Acceleration coefficients         -> columns [2N .. 3N-1]
                     for (int i = 0; i < num_of_feature_vectors; i++)
                     {
-                        vector_array[current_frame, i] += BitConverter.ToSingle(b.ReadBytes(4), 0);
+                        vector_array[current_frame, 2 * num_of_feature_vectors + i] = BitConverter.ToSingle(b.ReadBytes(4), 0);
                         pos += sizeof(float);
                     }
 
-                    // T - Third differential coefficients
+                    // T - Third-differential coefficients   -> columns [3N .. 4N-1]
                     for (int i = 0; i < num_of_feature_vectors; i++)
                     {
-                        vector_array[current_frame, i] += BitConverter.ToSingle(b.ReadBytes(4), 0);
+                        vector_array[current_frame, 3 * num_of_feature_vectors + i] = BitConverter.ToSingle(b.ReadBytes(4), 0);
                         pos += sizeof(float);
                     }
 
