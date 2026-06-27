@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "created": "2026-06-27",
+    "revised": "2026-06-27 (post-advisor): BUG-12 moved to a solo post-merge sequential group; BUG-13 deferred; Group C gated behind a reference grep; TRMS header gains a feature-version field.",
+    "branch": "fix/roadmap-bugs",
+    "rule": "Parallel groups (A,B,C) are file-disjoint and run concurrently. sequentialGroups run one at a time AFTER all parallel groups are merged. Ordering inside any group is sequential.",
+    "verification": "All copies located via find: H_FELDOLGOZO.cs x2, dtwApp_match.cs x2, HTK_Interface.cs x3, lpcData.cs x2, Engine.cs x1, Creator.cs x1, mfcc/Matrix/FFT-converted x1 each. File-disjointness of A/B/C confirmed: no path appears in two parallel groups. BUG-12's files (Engine.cs + Creator.cs + LITE Form1.cs) overlap A and B, which is exactly why BUG-12 is sequential/post-merge, not parallel."
+  },
+  "groups": [
+    {
+      "name": "A-dtw-engine",
+      "files": [
+        "/home/arsvivendi/git/Turan_engine/Turan_core/Turan_core/dtwApp_match.cs",
+        "/home/arsvivendi/git/Turan_engine/Felismero_motor_LITE/Felismero_motor/dtwApp_match.cs",
+        "/home/arsvivendi/git/Turan_engine/Turan_core/Turan_core/Engine.cs",
+        "/home/arsvivendi/git/Turan_engine/Turan_core/Turan_core/lpcData.cs"
+      ],
+      "bugIds": ["BUG-01", "BUG-08", "BUG-09", "BUG-10", "BUG-11"],
+      "notes": "Recognition/match + Engine. INTERNAL ORDER: decide width-source -> 01 -> 09 -> 10 -> 08 -> 11. WIDTH CONTRACT (binds 01/08/09/10): width comes from data.GetLength(1) / live Engine.mfcc_lpc_vect_num, NOT a bumped static; reject BUG-09's false premise that 01 sets the static to 60; derive Itakura order from the array, not a static. CRITICAL static-initializer trap (verified in source): dtwApp_match.cs ~line 84 'num_of_vectoritems = Engine.mfcc_lpc_vect_num' captures 15 at CLASS LOAD; EuclideanDistance (~235) loops on that cached copy while GetReferenceVector/GetSignalVector (~180/193) and temp3/temp4 (~466/467) read the live static. BUG-01 MUST reconcile EVERY width read-site to the live per-array width, or truncation/OOB results. BUG-01 must set Engine.mfcc_lpc_vect_num on BOTH turan(15) and htk(4*N) branches BEFORE bestMatch runs, and a native(15)/LPC(12) recognition after an htk(60) one must not read a stale 60 (mode-switch IndexOutOfRange hazard). Fold in BUG-01 peer-review residual: fix temp3/temp4 at dtwApp_match.cs:466/467 (latent OOB on 12-wide path). BUG-08 IS SCOPED TO dtwApp_match.cs costRecord (Changes 1+2) ONLY; its H_FELDOLGOZO/hasonlit cap (Change 3) is DROPPED because BUG-16 (Group B) deletes hasonlit - do NOT edit H_FELDOLGOZO.cs from this group. BUG-10 lands the REJECTED=-2 sentinel + threshold MECHANISM only; threshold CALIBRATION is deferred (needs runtime cost-scale data) - do not mark BUG-10 closed on the code diff. BUG-12 reader is NOT here anymore (moved to sequentialGroups). BUG-13 is DEFERRED (not in this group). lpcData.cs (core) is verify-only for BUG-01, no edit unless getRowLength must change to data.GetLength(0). Mirror every dtwApp_match.cs edit byte-identically in the LITE copy."
+    },
+    {
+      "name": "B-dsp-features",
+      "files": [
+        "/home/arsvivendi/git/Turan_engine/Turan_creator/Turan_creator/H_FELDOLGOZO.cs",
+        "/home/arsvivendi/git/Turan_engine/Felismero_motor_LITE/Felismero_motor/H_FELDOLGOZO.cs",
+        "/home/arsvivendi/git/Turan_engine/Turan_creator/Turan_creator/Creator.cs",
+        "/home/arsvivendi/git/Turan_engine/Felismero_motor_LITE/Felismero_motor/Form1.cs"
+      ],
+      "bugIds": ["BUG-02", "BUG-03", "BUG-04", "BUG-05", "BUG-06", "BUG-07", "BUG-16"],
+      "notes": "Feature extraction (DSP) + dead native DTW removal. INTERNAL ORDER: 16(delete dead hasonlit first) -> 04 -> 02 -> 05 -> 06 -> 03(label-only comments) -> 07. Apply every H_FELDOLGOZO change to BOTH copies identically (byte-for-byte; they feed the same DTW comparison). BUG-03 is LABEL-ONLY (comments/XML-doc, zero executable change): DROP its optional Turan_core/Engine.cs enum comment (keeps Group B inside its 4 files), and describe the FFT-discarded defect INLINE - no 'BUG-17' token, no ROADMAP.md edit. BUG-03 stays OPEN/partially-addressed (naming trap only); the accuracy half (true MFCC / Mahalanobis DTW) remains tracked. BUG-04 (Math.Sqrt(2.0/24.0)) edits a line inside mfccszamitas; survives (mfccszamitas is NOT deleted by the chosen label-only BUG-03). BUG-08's hasonlit-cap part is NOT done here (hasonlit removed by 16). DO NOT edit Creator.SerializeArray here - BUG-12 writer moved to sequentialGroups. TEMPLATE-STALENESS: BUG-02 changes native .mfcc feature content; all .mfcc templates must be regenerated after merge. Staleness must become DETECTABLE via the TRMS feature-version header that BUG-12 (sequential) adds - so BUG-02's feature change is acceptable here provided BUG-12 lands before/with template regeneration. Document the regenerate-once requirement in PROGRESS.md."
+    },
+    {
+      "name": "C-finish-native-mfcc",
+      "files": [
+        "/home/arsvivendi/git/Turan_engine/Felismero_motor_LITE/Felismero_motor/mfcc.cs",
+        "/home/arsvivendi/git/Turan_engine/Felismero_motor_LITE/Felismero_motor/Matrix.cs",
+        "/home/arsvivendi/git/Turan_engine/Felismero_motor_LITE/Felismero_motor/FFT-converted.cs",
+        "/home/arsvivendi/git/Turan_engine/reference/unused-native-mfcc/"
+      ],
+      "bugIds": ["BUG-15"],
+      "notes": "REVISED per user: do NOT delete. FINISH the CoMIRVA MFCC port and QUARANTINE it. Follow plans/BUG-15.md exactly. (1) Port all three interdependent files to valid C#: mfcc.cs (fix the Java-ism checklist), Matrix.cs (currently an empty 'class Matrix {}' stub - implement the JAMA-style members mfcc.cs calls: ctors(double[][],m,n / double[],m / m,n), set, getMatrix, times, timesEquals, logEquals, thrunkAtLowerBoundary, getColumnPackedCopy), FFT-converted.cs (the FFT class is fully commented out - uncomment+port: FFT_NORMALIZED_POWER, WND_HANNING, ctor(type,size,window), transform(double[],double[])). (2) MOVE the three (FFT-converted.cs -> FFT.cs) to repo-root reference/unused-native-mfcc/ and add a README.md that says plainly 'UNUSED - not part of any build', explains it's the basis for a future HTK-free native MFCC, and notes it is code-review-verified NOT compiler-verified. (3) Verify the three are absent from Felismero_motor_lite.csproj <Compile Include> (they are; if not, remove the include lines). Keep namespace Felismero_motor. File-disjoint from A and B; single high-effort owner ports all three for consistency. Use plain file ops (write new files under reference/, remove the three originals); the commit phase stages both removed + added paths with 'git add -A'."
+    }
+  ],
+  "sequentialGroups": [
+    {
+      "name": "S1-trms-serialization",
+      "runAfter": ["A-dtw-engine", "B-dsp-features", "C-dead-code-removal"],
+      "files": [
+        "/home/arsvivendi/git/Turan_engine/Turan_core/Turan_core/Engine.cs",
+        "/home/arsvivendi/git/Turan_engine/Turan_creator/Turan_creator/Creator.cs",
+        "/home/arsvivendi/git/Turan_engine/Felismero_motor_LITE/Felismero_motor/Form1.cs"
+      ],
+      "bugIds": ["BUG-12"],
+      "notes": "ATOMIC post-merge serialization fix. One agent owns ALL of: Creator.SerializeArray (writer), Engine.DeSerializeArray (reader), and LITE Form1.cs (writer+reader) so the TRMS format is byte-identical across writer and reader in a single commit. Runs ONLY after A/B/C are applied (it shares Engine.cs with A and Creator.cs/Form1.cs with B). Implements the TRMS format in sharedContracts INCLUDING the 1-byte featVersion field. Keep the BinaryFormatter legacy fallback so pre-existing .mfcc/.lpc templates still load. Re-read both write and read sites to confirm byte-exact symmetry (no compiler available to catch drift)."
+    }
+  ],
+  "deferred": [
+    {
+      "id": "BUG-13",
+      "reason": "HTK process integration. Self-rated approved=false; needs a Windows + real HCopy.exe smoke test that cannot run in this environment, and the peer/adversarial review found a process-terminating throw escaping the Turan_tester/Form1.cs:90 caller try/catch, a relative-WorkingDirectory + UseShellExecute=false failure, and a ReadToEnd deadlock anti-pattern. Landing unverifiable, regression-risk code that cannot meet its own merge bar adds risk for zero gain. Deferred until a build/run toolchain exists. plans/BUG-13.md retained."
+    },
+    {
+      "id": "BUG-14",
+      "reason": "Broad cross-cutting de-duplication into a shared Turan.Dsp library. Even its 'safe' Phase A touches every duplicated file (conflicts with A and B); Phase B is a third, contradictory width-source; Phases C/D need a new project + build. Defer entirely until A/B/C merge and a build toolchain exists; then run Phase A only, reconciling the copies these fixes rewrote."
+    },
+    {
+      "id": "BUG-10-calibration",
+      "reason": "The rejection MECHANISM (sentinel + threshold field) lands in Group A, but the calibrated threshold VALUE needs runtime cost-scale data gathered after BUG-01/02 change the cost scale - unobtainable without running the app. Mechanism shipped inert; calibration deferred."
+    }
+  ],
+  "sharedContracts": [
+    "WIDTH CONTRACT (Group A, binds BUG-01/08/09/10): The single DTW width source is the per-array width via data.GetLength(1), equivalently the LIVE value of Engine.mfcc_lpc_vect_num at match time - NOT a compile-time 15 and NOT a hard-bumped 60. BUG-01 concatenates HTK MFCC_D_A_T into 4*N columns (60 for N=15) and sets Engine.mfcc_lpc_vect_num on BOTH branches (htk: 4*N; turan: 15) BEFORE bestMatch so the global is order-independent. EuclideanDistance loop bound and the class-load-cached num_of_vectoritems must read the live width. BUG-09 (Itakura) derives its order from the array width, not from any static. temp3/temp4 at dtwApp_match.cs:466/467 sized from the live width. Mirrored byte-identically in the LITE dtwApp_match.cs copy. Mode-switch: a native(15)/LPC(12) match after an htk(60) match must not read a stale 60.",
+    "REJECTED SENTINEL (Group A, BUG-10): Engine.REJECTED and dtwApp_match's reject constant MUST both equal -2 (distinct from the pre-existing -1 = 'templates not configured'). Add a normalized-cost RejectionThreshold; default behavior inert until calibrated. Both dtwApp_match.cs copies use the identical sentinel and gate logic.",
+    "TRMS SERIALIZATION FORMAT (sequentialGroups S1, BUG-12): Writer (Creator.SerializeArray + LITE Form1.cs writer) and reader (Engine.DeSerializeArray + LITE Form1.cs reader) implement this exact little-endian, length-prefixed layout: [4-byte ASCII magic 'TRMS'][1-byte formatVersion=1][1-byte featVersion=1][int32 rows = data.GetLength(0)][int32 cols = data.GetLength(1)][rows*cols * float64/double, row-major]. Storing BOTH dims makes the format width-agnostic (15/48/60). featVersion makes stale feature content DETECTABLE: a reader seeing featVersion < current (or magic absent) must warn that the template predates BUG-02's feature-extraction change and should be regenerated. The reader MUST retain a legacy fallback: if the magic is absent, fall back to BinaryFormatter to read pre-existing .mfcc/.lpc templates (graceful degrade, no hard break). All method bodies land in ONE commit.",
+    "H_FELDOLGOZO DUPLICATE PARITY (Group B): every functional edit (BUG-02/04/05/06) and the BUG-16 deletion must be applied to BOTH H_FELDOLGOZO.cs copies (Turan_creator + Felismero_motor_LITE) so template-builder and live-extractor DSP stay bit-identical; diff the two copies' edited regions to confirm parity.",
+    "DEAD-METHOD OWNERSHIP (cross A<->B coordination, no file overlap): BUG-16 (Group B) deletes hasonlit + its backing fields from both H_FELDOLGOZO.cs copies and the commented driver in LITE Form1.cs. Consequently BUG-08 (Group A) MUST drop its hasonlit/tavtomb/ertomb cap edits and ship only the dtwApp_match.cs costRecord fix."
+  ],
+  "commitChunks": [
+    {
+      "message": "fix(dtw): unify DTW feature-vector width to live per-array size and add rejection sentinel",
+      "bugIds": ["BUG-01", "BUG-08", "BUG-09", "BUG-10", "BUG-11"],
+      "files": [
+        "Turan_core/Turan_core/dtwApp_match.cs",
+        "Felismero_motor_LITE/Felismero_motor/dtwApp_match.cs",
+        "Turan_core/Turan_core/Engine.cs"
+      ]
+    },
+    {
+      "message": "fix(dsp): restore pre-emphasis, fix FIR/window/DCT-scale, remove dead native DTW; clarify log-mel labeling",
+      "bugIds": ["BUG-02", "BUG-03", "BUG-04", "BUG-05", "BUG-06", "BUG-07", "BUG-16"],
+      "files": [
+        "Turan_creator/Turan_creator/H_FELDOLGOZO.cs",
+        "Felismero_motor_LITE/Felismero_motor/H_FELDOLGOZO.cs",
+        "Turan_creator/Turan_creator/Creator.cs",
+        "Felismero_motor_LITE/Felismero_motor/Form1.cs"
+      ]
+    },
+    {
+      "message": "feat(mfcc): finish CoMIRVA native MFCC port and quarantine as unused reference",
+      "bugIds": ["BUG-15"],
+      "stage": "git add -A (move: removes 3 originals, adds reference/unused-native-mfcc/*)",
+      "files": [
+        "Felismero_motor_LITE/Felismero_motor/mfcc.cs",
+        "Felismero_motor_LITE/Felismero_motor/Matrix.cs",
+        "Felismero_motor_LITE/Felismero_motor/FFT-converted.cs",
+        "reference/unused-native-mfcc/"
+      ]
+    },
+    {
+      "message": "feat(io): versioned TRMS template format with legacy BinaryFormatter fallback",
+      "bugIds": ["BUG-12"],
+      "files": [
+        "Turan_core/Turan_core/Engine.cs",
+        "Turan_creator/Turan_creator/Creator.cs",
+        "Felismero_motor_LITE/Felismero_motor/Form1.cs"
+      ]
+    }
+  ]
+}

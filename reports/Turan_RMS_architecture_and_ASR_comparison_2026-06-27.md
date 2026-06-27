@@ -6,6 +6,8 @@
 **Codebase size:** ~42,500 LOC C# / .NET, x86, Windows
 **Scope of this report:** (A) document the architecture and algorithms; (B) score the *as-built* algorithms 0–100; (C) reframe the task correctly; (D) identify and score the best modern OSS solutions for self-trained ≥99%-accurate recognition; (E) recommend a migration path.
 
+> **Status (2026-06-28):** the Part-A.6 defects have since been planned, reviewed, and fixed on branch `fix/roadmap-bugs` (code-review-verified, not compiled — no toolchain here). See `ROADMAP.md` for the bug list + per-bug status and `plans/PROGRESS.md` for the fix record, errors, insights, and learnings. These fixes *stabilize* the as-built engine; they do not change the architectural conclusion in Parts C–E.
+
 ---
 
 ## 0. Executive summary

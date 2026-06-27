@@ -10,6 +10,33 @@ Legend: 🔴 P0 critical (breaks accuracy on a live path) · 🟠 P1 high · �
 
 ---
 
+## Status (2026-06-28)
+
+Fixes were planned, peer- and adversarially-reviewed, implemented by parallel agents in three file-disjoint groups + one atomic serialization step, and committed in logical chunks on branch `fix/roadmap-bugs`. **All fixes are code-review-verified, NOT compiler-verified** — there is no .NET/mono/msbuild toolchain in this environment, so nothing was built or run. See `plans/PROGRESS.md` for the full record (errors, insights, learnings) and `plans/BUG-*.md` for per-bug plans + reviews.
+
+| Bug | Status | Where committed |
+|---|---|---|
+| BUG-01 HTK Δ/ΔΔ/ΔΔΔ summed away | ✅ Fixed | `fix(asr-core)` |
+| BUG-02 pre-emphasis no-op | ✅ Fixed | `fix(dsp)` |
+| BUG-03 native "MFCC" is log-mel (no DCT) | ◐ Partially — **label-only** (naming clarified); accuracy half (true DCT / Mahalanobis DTW) **still open** | `fix(dsp)` |
+| BUG-04 DCT `Sqrt(2/24)`→0 | ✅ Fixed | `fix(dsp)` |
+| BUG-05 `fir_filter` aliases input / IIR | ✅ Fixed | `fix(dsp)` |
+| BUG-06 `hamming_ablak` off-by-one | ✅ Fixed | `fix(dsp)` |
+| BUG-07 empty catch blocks | ✅ Fixed | `fix(dsp)` |
+| BUG-08 `costRecord[120]` cap | ✅ Fixed | `fix(asr-core)` |
+| BUG-09 Itakura magic-13 order | ✅ Fixed | `fix(asr-core)` |
+| BUG-10 no rejection/FAR control | ◐ **Mechanism** shipped (REJECTED=-2 + threshold, **inert**); **calibration deferred** (needs runtime cost data) | `fix(asr-core)` |
+| BUG-11 `MatchLength` stub | ✅ Fixed (frame-count duration match) | `fix(asr-core)` |
+| BUG-12 `BinaryFormatter` | ✅ Fixed — versioned **TRMS** format + `featVersion` staleness marker + legacy read fallback | `fix(asr-core)` (reader) + `fix(dsp)` (writer) |
+| BUG-13 HTK process integration | ⏸ **Deferred** — regression-risk + needs Windows/HCopy runtime test (uncompilable here) |
+| BUG-14 de-duplicate triplicated files | ⏸ **Deferred** — broad refactor, conflicts with all parallel work, needs a build |
+| BUG-15 dead Java-port `mfcc.cs` | ✅ Done — **finished & quarantined** (per user) to `reference/unused-native-mfcc/`, not deleted | `feat(mfcc)` |
+| BUG-16 dead `hasonlit` DTW | ✅ Fixed (deleted) | `fix(dsp)` |
+
+> ⚠️ **Two follow-ups gate production use:** (1) **BUG-02 changes native `.mfcc` feature content** → all native templates must be regenerated (the new `featVersion` flags stale ones). (2) **BUG-10 ships with rejection inert** and the old accidental cost cap removed → the build performs **no input rejection** until BUG-10's threshold is calibrated on runtime data; for the assistive/medical command use case, do not treat the pre-calibration build as production-ready.
+
+---
+
 ## P0 — Critical correctness (live recognition paths)
 
 ### 🔴 BUG-01 — HTK dynamic features (Δ/ΔΔ/ΔΔΔ) are summed away
