@@ -1,10 +1,10 @@
 # Open-Source, Local, Low-Resource, Trainable, Language-Independent Near-Real-Time Speech Recognition — A 2026 Research Report
 
 **Date:** 2026-06-27
-**Author:** Deep-research harness — primary run (6-angle fan-out → 22 sources → 103 claims → 25 verified, 23 confirmed / 2 killed) + library-landscape re-run (4-angle → 14 sources → 19 verified, 19 confirmed / 0 killed) + analyst synthesis
+**Author:** Deep-research harness — primary run (6-angle → 22 sources → 103 claims → 25 verified, 23 confirmed / 2 killed) + library-landscape re-run (4-angle → 14 sources → 19 verified / 19 confirmed / 0 killed) + research-toolkits re-run (3-angle → 12 sources → 35 verified / 35 confirmed / 0 killed) + analyst synthesis. **77 claims adversarially verified across 48 sources; every named library is cited.**
 **Scope:** Open-source ASR libraries that run locally, need modest resources, are trainable on custom/low-resource languages, are language-independent, and support near-real-time (streaming) recognition. Algorithms are identified explicitly; candidates are scored in exact SI units and on a 0–100 relative spectrum.
 
-> **Provenance convention.** **[V]** = independently fetched and survived 3-vote adversarial verification (citation given). **[V\*]** = extracted from an authoritative *primary* source (official docs / GitHub README / peer-reviewed paper) in the follow-up library-landscape run, but not put through the 3-vote stage. **[B]** = well-established background (textbook / long-standing project documentation) used only where neither pass produced a citation — now limited to **ESPnet, SpeechBrain, and Silero**, whose source pages did not make the fetch cut. A second focused run (4 angles → 26 URLs → 14 fetched → **19 claims verified, 19 confirmed, 0 killed**) upgraded most classic toolkits (Kaldi, Vosk, Julius, Coqui/DeepSpeech, wav2letter, PocketSphinx, sherpa-onnx/k2/icefall) from background to cited evidence.
+> **Provenance convention.** **[V]** = independently fetched and survived 3-vote adversarial verification (citation given). **[V\*]** = extracted from an authoritative *primary* source (official docs / GitHub README / peer-reviewed paper) in a follow-up run, but not put through the 3-vote stage. **[B]** = textbook/background — **no longer used for any library** after three research runs. Every candidate library in this report now carries a citation. Run totals: **primary** (6 angles, 22 sources, 25 verified / 23 confirmed) + **library-landscape re-run** (4 angles, 14 sources, **19 verified / 19 confirmed / 0 killed** — Kaldi, Vosk, Julius, Coqui/DeepSpeech, wav2letter, PocketSphinx, sherpa-onnx/k2/icefall) + **research-toolkits re-run** (3 angles, 12 sources, **35 verified / 35 confirmed / 0 killed** — ESPnet, SpeechBrain, Silero).
 
 ---
 
@@ -53,12 +53,12 @@ The trajectory below is the textbook consensus, corroborated by multiple surveys
 | **wav2letter / Flashlight** | **CNN acoustic model + CTC/ASG**, beam-search decoder | Limited | Yes **[V]** (Vivoka benchmark: LER 6.9 / WER 7.2 w/ MFCC) |
 | **wav2vec 2.0 / XLS-R (fairseq/HF)** | **Self-supervised CNN+Transformer**, fine-tuned with **CTC** head | CTC chunked | **Yes — excels at low-resource** **[V]** (HF XLS-R) |
 | **HuBERT** | **SSL masked-prediction** w/ offline k-means targets; CTC fine-tune | CTC chunked | Yes **[V]** (TASLP 2021) |
-| **SpeechBrain** | Toolkit: CTC, AED, RNN-T, wav2vec2, Conformer | Yes (depends on recipe) | **Yes — research-friendly** **[B]** |
-| **ESPnet** | Toolkit: CTC/attention hybrid, RNN-T, Conformer/Branchformer | Yes (streaming recipes) | **Yes** **[B]** |
+| **SpeechBrain** | Toolkit: **hybrid CTC/attention** (Conformer + Transformer decoder + LM), **wav2vec2+CTC**, **Conformer-Transducer (RNN-T)** streaming via Dynamic Chunk Training | **Yes** (streaming Conformer-T) | **Yes — research-friendly** **[V]** (HF model cards + docs) |
+| **ESPnet** | Toolkit: **hybrid CTC/attention E2E** (joint one-pass decoding); encoders **BLSTM → Conformer / Branchformer / E-Branchformer**; 6-layer Transformer decoder; CTC & RNN-T variants | Yes (ContextualBlockConformer) | **Yes** **[V]** (arXiv 1804.00015, 2207.02971, 2305.11073 + docs) |
 | **NVIDIA NeMo** | **FastConformer** encoder + CTC / **TDT-RNN-T** / AED decoders | Yes (cache-aware) | **Yes — strongest training stack** **[V]** (arXiv 2509.14128) |
 | **Whisper / whisper.cpp / faster-whisper** | **Encoder-decoder Transformer**, weakly supervised, multilingual | No (chunked pseudo-stream) | Fine-tunable (incl. LoRA) **[V]** (arXiv 2212.04356; PMC12431075) |
 | **distil-whisper** | Distilled Whisper (encoder-decoder) | No | Distillation pipeline **[V]** (referenced in arXiv 2601.19919 comparisons) |
-| **Silero** | Proprietary-weights neural (enterprise edition closed); CTC-style | Yes | Limited (commercial training) **[B]** |
+| **Silero** | **CTC** acoustic model; feed-forward (grouped 1D conv + squeeze-excitation + transformer blocks), no RNN/attention/phonemes | Yes | Yes — small model 25–35 M params, trainable on 2×1080 Ti **[V]** (PyTorch Hub; thegradient.pub) |
 | **Parakeet (NeMo)** | **FastConformer + Token-and-Duration Transducer (TDT / RNN-T-style)** | Yes | Yes **[V]** (arXiv 2509.14128; HF parakeet-tdt-0.6b-v3) |
 | **Canary (NeMo)** | **FastConformer encoder + Transformer (AED) decoder, 8× subsampling** | No (batch) | Yes, multilingual **[V]** (arXiv 2509.14128) |
 | **Moonshine / Moonshine v2** | Encoder-decoder; v2 = **"ergodic streaming encoder" (sliding-window self-attention)** | **Yes (v2)** | Yes (small models) **[V]** (arXiv 2602.12241) |
@@ -98,7 +98,7 @@ Metrics are pulled from the cited sources. **They are NOT strictly apples-to-app
 | Large-v2/v3 | 1,550 M | 2.9 GiB | ~3.9 GB |
 | Turbo | 809 M | 1.6 GiB | ~2.3 GB |
 
-### 4c. Classic trainable toolkits (now cited; provenance per cell)
+### 4c. Trainable toolkits & classic systems (now cited; provenance per cell)
 
 | Library | Algorithm | Model size | Inference RAM | WER (if reported) | Streaming | Provenance |
 |---|---|---|---|---|---|---|
@@ -110,7 +110,9 @@ Metrics are pulled from the cited sources. **They are NOT strictly apples-to-app
 | **Coqui STT / DeepSpeech** | RNN + CTC + KenLM 5-gram scorer | ~190 MB AM (+ scorer) | ~0.5 GB | **5.97% LibriSpeech-clean** | Partial (forward recurrence) | **[V]** docs + Vivoka |
 | **wav2letter / Flashlight** | CNN + CTC/ASG | — | — | **WER 7.2 / LER 6.9** (MFCC) | Limited | **[V]** Vivoka benchmark |
 | **wav2vec2-XLS-R-300M** | SSL Transformer + CTC head | ~1.2 GB fp32 | ~2–4 GB (train) | ~32% on 4 h Turkish | CTC chunked | **[V]** HF XLS-R |
-| **ESPnet / SpeechBrain / Silero** | CTC/attention, Conformer/RNN-T (toolkits) | varies | varies | recipe-dependent | Yes (streaming recipes) | **[B]** (source pages did not make fetch cut) |
+| **ESPnet** | Hybrid CTC/attention; Conformer/Branchformer/E-Branchformer | 38–116 M params (recipe) | varies | **2.4% / 5.5%** (Branchformer 116 M, LS-960 clean/other); 6.3% / 17.0% (E-Branchformer 38 M, LS-100) | **Yes** (contextual block) | **[V]** arXiv 2207.02971, 2305.11073 |
+| **SpeechBrain** | Conformer+CTC/attn+LM; wav2vec2+CTC; Conformer-Transducer (streaming) | recipe | varies | **wav2vec2+CTC 1.90% / 3.96%**; Conformer+LM 2.01% / 4.52%; **streaming 3.10% @1280 ms, 3.62% @320 ms** chunk | **Yes** (Dynamic Chunk Training) | **[V]** HF cards + docs |
+| **Silero** | CTC, grouped-1D-conv + SE + transformer blocks | **xxsmall 25–50 MB (10–15 MB int8)**; small 50–200 MB; large 300–500+ MB | low (CPU) | **5.5% / 13.5%** (V5 EN, LS clean/other; 6.9% in V1) | Yes | **[V]** github.com/snakers4/silero-models |
 
 ---
 
@@ -188,7 +190,9 @@ WER definition for reference: **WER = (S + D + I) / N** (substitutions + deletio
 
 **Method.** The research question was decomposed into 6 angles (library landscape; quantitative benchmarks; SOTA-2026/newcomers; algorithm evolution; edge/low-resource practice; <1 % WER feasibility). 7 parallel web searches → 22 sources fetched → 103 falsifiable claims extracted → top 25 verified by **3 independent adversarial voters each** (a claim dies on ≥2/3 refutations). **23 confirmed, 2 killed.** One search angle (broad/primary library landscape) failed mid-response (API connection closed) in the first run.
 
-**Follow-up run (library-landscape re-do).** Because the classic toolkits were missing from the verified set, a second focused harness was run: 4 angles (Kaldi-family, lightweight-edge, CTC-era, research-toolkits) → 26 unique URLs → 14 fetched → **19 claims verified by 3-vote, 19 confirmed, 0 killed**, drawing on official docs (Vosk, Julius, DeepSpeech/Coqui, Kaldi PR, sherpa-onnx), peer-reviewed papers (PocketSphinx ICASSP 2006, pruned-RNN-T Interspeech 2022), and an embedded-ASR benchmark. This upgraded Kaldi, Vosk, Julius, Coqui/DeepSpeech, wav2letter, PocketSphinx, and Next-gen Kaldi to **[V]/[V\*]**. **ESPnet, SpeechBrain, and Silero** still rest on **[B]** background — their source pages were found in search but did not survive the dedup/relevance fetch cut (a third targeted run could close this).
+**Follow-up run (library-landscape re-do).** Because the classic toolkits were missing from the verified set, a second focused harness was run: 4 angles (Kaldi-family, lightweight-edge, CTC-era, research-toolkits) → 26 unique URLs → 14 fetched → **19 claims verified by 3-vote, 19 confirmed, 0 killed**, drawing on official docs (Vosk, Julius, DeepSpeech/Coqui, Kaldi PR, sherpa-onnx), peer-reviewed papers (PocketSphinx ICASSP 2006, pruned-RNN-T Interspeech 2022), and an embedded-ASR benchmark. This upgraded Kaldi, Vosk, Julius, Coqui/DeepSpeech, wav2letter, PocketSphinx, and Next-gen Kaldi to **[V]/[V\*]**.
+
+**Second follow-up run (research toolkits).** A third focused harness targeted the remaining three: 3 angles (ESPnet, SpeechBrain, Silero) → 18 URLs → 12 fetched (per-library balanced) → **35 claims verified by 3-vote, 35 confirmed, 0 killed**, drawing on peer-reviewed papers (ESPnet 1804.00015, Branchformer 2207.02971, E-Branchformer 2305.11073), official HuggingFace model cards + ReadTheDocs (SpeechBrain), and PyTorch Hub / GitHub / The Gradient (Silero). With this, **every named library now carries a citation** and no entry relies on background.
 
 **Killed / refuted claims (do not rely on):**
 - ❌ "ASKD/FastWhisper-large delivers a **5× latency speedup** (659 ms → 132 ms)" — **refuted 1–2** (model-name mismatch; no GPU/batch/decoding config stated; single preprint). (arXiv 2601.19919)
@@ -199,7 +203,7 @@ WER definition for reference: **WER = (S + D + I) / N** (substitutions + deletio
 - **Vendor selection bias.** NVIDIA Canary/Parakeet figures are vendor-reported (though independently reproduced on the leaderboard).
 - **Not apples-to-apples.** WER/CER, RTFx, and latency depend heavily on test set, decoding (LM or not), hardware (CPU vs A100 vs L4), batch size, and streaming chunk config. Cross-table comparisons are directional.
 - **0–100 scores are analyst judgments**, anchored to SI evidence but not themselves measured.
-- **Coverage gap (largely closed).** The follow-up run added cited evidence for Kaldi, Vosk, Julius, Coqui/DeepSpeech, wav2letter, PocketSphinx, and Next-gen Kaldi (sherpa-onnx/k2/icefall). **Only ESPnet, SpeechBrain, and Silero remain on [B] background.** Note the WER figures for the classic systems (DeepSpeech 5.97 %, wav2letter 7.2 %) come from *older* models/benchmarks and are not directly comparable to the 2026 leaderboard numbers in §4a.
+- **Coverage gap (closed).** All three follow-up-targeted toolkits now carry citations; **no library in this report relies on [B] background.** Note, however, that WER figures are drawn from *heterogeneous* sources and eras: the classic-system numbers (DeepSpeech 5.97 %, wav2letter 7.2 %, Silero V1 6.9 %) and the toolkit LibriSpeech numbers (ESPnet/SpeechBrain ~1.9–2.7 % test-clean) are **not** directly comparable to each other or to the 2026 multi-domain leaderboard averages in §4a — different test sets, decoding, and LM use. Treat each within its own row.
 
 **Open questions worth a follow-up run:**
 1. Same-metric head-to-head of the classic trainable toolkits (Kaldi/k2/icefall/sherpa, Vosk, ESPnet, SpeechBrain, Coqui) on latency/RTF/size/RAM/WER.
@@ -234,10 +238,18 @@ WER definition for reference: **WER = (S + D + I) / N** (substitutions + deletio
 - arXiv 2206.13236 — Pruned RNN-T (k2/icefall, Conformer + stateless decoder), Interspeech 2022
 - cs.cmu.edu/~dhuggins PocketSphinx — semi-continuous GMM-HMM (ICASSP 2006)
 
+**Research-toolkit sources (third run, [V]):**
+- arXiv 1804.00015 — ESPnet (hybrid CTC/attention, BLSTM/location-aware attention)
+- arXiv 2207.02971 — Branchformer (cgMLP + attention); LS-960 2.4 % / 5.5 %
+- arXiv 2305.11073 — E-Branchformer vs Conformer in ESPnet2; LS-100 6.3 % / 17.0 %
+- espnet.github.io ContextualBlockConformerEncoder — ESPnet streaming
+- HF speechbrain/asr-conformer-transformerlm-librispeech (2.01 % / 4.52 %), asr-wav2vec2-librispeech (1.90 % / 3.96 %), asr-streaming-conformer-librispeech (3.10 % @1280 ms); speechbrain.readthedocs.io streaming-Conformer tutorial
+- pytorch.org/hub/snakers4_silero-models_stt; github.com/snakers4/silero-models (sizes 25–500 MB, V5 5.5 % / 13.5 %); thegradient.pub "ImageNet moment for STT"; deepwiki silero-models
+
 **Secondary / practitioner:**
 - HuggingFace *Open ASR Leaderboard* blog; HF model cards (parakeet-tdt-0.6b-v3, nemotron-speech-streaming-en-0.6b, Moonshine)
 - Northflank, e2enetworks, onresonant, openwhispr, assemblyai, convertaudiototext blogs (benchmarks, edge deployment, accuracy expectations)
 - AI Magazine — *Is AI at Human Parity Yet? A Case Study on Speech Recognition*
 - Wikipedia — *Word Error Rate*
 
-*Report generated by two deep-research workflow runs — primary (105 agents, 22 sources, 25 claims verified, 23 confirmed) + a library-landscape re-run (75 agents, 14 sources, 19 claims verified, 19 confirmed) — with analyst synthesis. Verified claims carry citations ([V]/[V\*]); only ESPnet/SpeechBrain/Silero remain on background. Field is fast-moving — re-verify preprint numbers before relying on them.*
+*Report generated by three deep-research workflow runs — primary (105 agents, 22 sources, 25 verified / 23 confirmed) + library-landscape re-run (75 agents, 14 sources, 19 verified / 19 confirmed) + research-toolkits re-run (120 agents, 12 sources, 35 verified / 35 confirmed) — with analyst synthesis. 300 agents total; 77 claims adversarially 3-vote verified; every named library carries a citation ([V]/[V\*]). Field is fast-moving — re-verify preprint numbers before relying on them.*
