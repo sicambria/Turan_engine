@@ -82,7 +82,7 @@ namespace Felismero_motor
 
         public enum EngineMode
         {
-            mfcc,
+            mfcc,  // BUG-03: LOG-MEL filterbank features (no DCT), not true MFCC. Name/extension kept for compat.
             lpc
         }
 
@@ -677,6 +677,11 @@ namespace Felismero_motor
 
             else if (engine_mode == EngineMode.mfcc)
             {
+                // NOTE (BUG-03): "mfcc" is a misnomer kept for compat. .mfcc holds 15 LOG-MEL
+                // filterbank values/frame, no DCT (H_FELDOLGOZO.mfccszamitas is dead). win_fftdata
+                // below is unused; Window_Mel_Scale_Reduction is fed time-domain win_hammingdata
+                // (FFT power spectrum is computed but discarded — a separate, still-open DSP defect).
+                // Must stay byte-identical to Creator.cs extraction. See plans/BUG-03.md.
                 win_hammingdata = H_FELDOLGOZO.win_fir_hamming(win_pcmdata, extended_num_of_frames);
 
                 win_fftdata = FFTCalc_FrameByFrame(win_hammingdata);
@@ -752,6 +757,9 @@ namespace Felismero_motor
         {
             win_fftdata = new double[extended_num_of_frames, H_FELDOLGOZO.num_items_in_windowed_frame];
 
+            int fft_failed_frames = 0;
+            Exception first_fft_failure = null;
+
             // Read, FFT, Write back
 
             for (int frame = 0; frame < extended_num_of_frames; frame++)
@@ -769,9 +777,11 @@ namespace Felismero_motor
                 {
                     temp_frame_line = SoundAnalysis.FftAlgorithm.Calculate(temp_frame_line);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    fft_failed_frames++;
+                    if (first_fft_failure == null) first_fft_failure = ex;
+                    temp_frame_line = new double[H_FELDOLGOZO.num_items_in_windowed_frame];
                 }
 
                 // write back frame
@@ -784,6 +794,13 @@ namespace Felismero_motor
                 // continue with the next frame
             }
 
+            if (fft_failed_frames > 0)
+            {
+                MessageBox.Show("FFT failed on " + fft_failed_frames + " of "
+                    + extended_num_of_frames + " frame(s); MFCC features are unreliable. "
+                    + "First error: " + first_fft_failure.Message);
+            }
+
             return win_fftdata;
         }
 
@@ -792,6 +809,9 @@ namespace Felismero_motor
         public double[,] LPC_Calc_FrameByFrame(double[,] input_win_pcmdata)
         {
             win_lpcdata = new double[extended_num_of_frames, H_FELDOLGOZO.mfcc_lpc_vect_num];
+
+            int lpc_failed_frames = 0;
+            Exception first_lpc_failure = null;
 
             // Read, FFT, Write back
 
@@ -811,9 +831,10 @@ namespace Felismero_motor
                 {
                     Lpc.lpc_from_data(temp_frame_line, ref lpc_frame_line, temp_frame_line.Length, H_FELDOLGOZO.mfcc_lpc_vect_num);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    lpc_failed_frames++;
+                    if (first_lpc_failure == null) first_lpc_failure = ex;
                 }
 
                 // write back frame
@@ -826,10 +847,33 @@ namespace Felismero_motor
                 // continue with the next frame
             }
 
+            if (lpc_failed_frames > 0)
+            {
+                MessageBox.Show("LPC failed on " + lpc_failed_frames + " of "
+                    + extended_num_of_frames + " frame(s); LPC features are unreliable. "
+                    + "First error: " + first_lpc_failure.Message);
+            }
+
             return win_lpcdata;
         }
 
 
+
+        // BUG-12: TRMS versioned template format constants. These MUST stay
+        // byte-identical to Creator.SerializeArray (writer) and Engine.DeSerializeArray
+        // (reader). This LITE app is a self-contained writer+reader pair. Layout
+        // (little-endian):
+        //   [4-byte magic 'TRMS'][byte formatVersion][byte featVersion]
+        //   [int32 rows = GetLength(0)][int32 cols = GetLength(1)]
+        //   [rows*cols * float64, ROW-MAJOR]
+        private const byte TRMS_MAGIC_0 = (byte)'T';
+        private const byte TRMS_MAGIC_1 = (byte)'R';
+        private const byte TRMS_MAGIC_2 = (byte)'M';
+        private const byte TRMS_MAGIC_3 = (byte)'S';
+        private const byte TRMS_FORMAT_VERSION = 1;
+        // featVersion: bump when feature extraction changes (e.g. BUG-02) so old
+        // templates become detectable as stale and can be flagged for regeneration.
+        private const byte TRMS_FEAT_VERSION = 1;
 
         /// <summary>
         /// Serializes the array into the specified file.
@@ -838,17 +882,24 @@ namespace Felismero_motor
         /// <param name="fname">Output filename.</param>
         public static void SerializeArray(double[,] arList, string fname)
         {
-            //Console.WriteLine("Please wait while settings are saved...");
-            FileStream fstream = new FileStream(fname, FileMode.Create, FileAccess.Write);
-            BinaryFormatter binFormat = new BinaryFormatter();
-            try
+            // BUG-12: explicit length-prefixed TRMS binary format (replaces the
+            // deprecated/insecure BinaryFormatter). BinaryWriter is little-endian.
+            using (FileStream fstream = new FileStream(fname, FileMode.Create, FileAccess.Write))
+            using (BinaryWriter bw = new BinaryWriter(fstream))
             {
-                binFormat.Serialize(fstream, arList);
-            }
-            finally
-            {
-                fstream.Close();
-                //Console.WriteLine("Transfer is complete!");
+                int rows = arList.GetLength(0);
+                int cols = arList.GetLength(1);
+                bw.Write(TRMS_MAGIC_0);        // 1 byte 'T'
+                bw.Write(TRMS_MAGIC_1);        // 1 byte 'R'
+                bw.Write(TRMS_MAGIC_2);        // 1 byte 'M'
+                bw.Write(TRMS_MAGIC_3);        // 1 byte 'S'
+                bw.Write(TRMS_FORMAT_VERSION); // 1 byte
+                bw.Write(TRMS_FEAT_VERSION);   // 1 byte
+                bw.Write(rows);                // Int32, little-endian
+                bw.Write(cols);                // Int32, little-endian
+                for (int r = 0; r < rows; r++)
+                    for (int c = 0; c < cols; c++)
+                        bw.Write(arList[r, c]); // Double (float64), little-endian
             }
         }
 
@@ -860,21 +911,51 @@ namespace Felismero_motor
         /// <returns>2D double[,] array</returns>
         public static double[,] DeSerializeArray(string fname)
         {
-            FileStream fstream = new FileStream(fname, FileMode.Open, FileAccess.Read);
-            BinaryFormatter binFormat = new BinaryFormatter();
-            double[,] binArray;
-
-            try
+            // BUG-12: versioned reader. New templates carry the "TRMS" magic and are
+            // read with BinaryReader (little-endian). Legacy templates written by the
+            // old BinaryFormatter builds have no magic -> rewind and fall back so
+            // pre-existing .mfcc/.lpc files still load (graceful degrade).
+            using (FileStream fstream = new FileStream(fname, FileMode.Open, FileAccess.Read))
             {
-                binArray = (double[,])binFormat.Deserialize(fstream);
-            }
-            finally
-            {
-                fstream.Close();
-                //Console.WriteLine("Transfer is complete!");
-            }
+                byte[] magic = new byte[4];
+                int read = fstream.Read(magic, 0, 4);
+                bool isTrms = (read == 4 &&
+                               magic[0] == TRMS_MAGIC_0 && magic[1] == TRMS_MAGIC_1 &&
+                               magic[2] == TRMS_MAGIC_2 && magic[3] == TRMS_MAGIC_3);
 
-            return binArray;
+                if (isTrms)
+                {
+                    using (BinaryReader br = new BinaryReader(fstream))
+                    {
+                        byte formatVersion = br.ReadByte();
+                        byte featVersion = br.ReadByte();
+                        if (featVersion < TRMS_FEAT_VERSION)
+                        {
+                            // Staleness hook (BUG-02 / BUG-12): template predates the
+                            // current feature-extraction change; flag for regeneration.
+                            Console.Error.WriteLine("Turan BUG-12: template '" + fname +
+                                "' featVersion " + featVersion + " < current " + TRMS_FEAT_VERSION +
+                                " (formatVersion " + formatVersion + "); predates the BUG-02" +
+                                " feature change and should be regenerated.");
+                        }
+                        int rows = br.ReadInt32();
+                        int cols = br.ReadInt32();
+                        double[,] arr = new double[rows, cols];
+                        for (int r = 0; r < rows; r++)
+                            for (int c = 0; c < cols; c++)
+                                arr[r, c] = br.ReadDouble();
+                        return arr;
+                    }
+                }
+
+                // ---- Legacy fallback: pre-TRMS BinaryFormatter stream ----
+                Console.Error.WriteLine("Turan BUG-12: template '" + fname +
+                    "' has no TRMS magic (legacy BinaryFormatter format); loading via" +
+                    " fallback. Regenerate to upgrade to the versioned format.");
+                fstream.Seek(0, SeekOrigin.Begin);
+                BinaryFormatter binFormat = new BinaryFormatter();
+                return (double[,])binFormat.Deserialize(fstream);
+            }
         }
 
 
@@ -1430,80 +1511,6 @@ namespace Felismero_motor
 
 
 
-        //private void CalcDTWDistances()
-        //{
-        //    if (!dtw_ref_ready)
-        //    {
-        //        MessageBox.Show("Referencia nincs betöltve!");
-        //        return;
-        //    }
-
-        //    lb_dtw_values.Items.Clear();
-
-
-        //    //double[,] ref_array = new double[14, 14];
-
-        //    //for (int i = 0; i < 14; i++)
-        //    //{
-        //    //    for (int j = 0; j < 14; j++)
-        //    //    {
-        //    //        ref_array[i, j] = 1;
-        //    //    }
-        //    //}
-
-
-        //    System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-        //    sw.Reset();
-        //    sw.Start();
-
-
-        //    //H_FELDOLGOZO.referencia = ref_array;
-
-        //    H_FELDOLGOZO.referencia = win_meldata;   // num of frames innen: btn_win_mfcc_allin1_Click
-
-        //    //win_REF_meldata=DeSerializeArray(ofd_openwav.FileName + ".mfcc");
-
-        //    H_FELDOLGOZO.counter_ref = num_of_frames;
-
-        //    foreach (string fname in lb_mfcc_files.Items)
-        //    {
-        //        win_REF_meldata = DeSerializeArray("dat\\" + fname);
-
-        //        int result = H_FELDOLGOZO.hasonlit(ref win_REF_meldata, Convert.ToInt32(win_REF_meldata.Length / 15));
-
-        //        lb_dtw_values.Items.Add(result);
-
-        //        this.Text = result.ToString();
-
-
-        //        if (cb_disp_dtw_data.Checked)
-        //        {
-        //            H_FELDOLGOZO.Show2dArray(H_FELDOLGOZO.ertomb, win_REF_meldata.Length / 15);
-        //        }
-
-        //        //this.Text = result.ToString();
-
-        //        //MessageBox.Show(result.ToString());
-        //    }
-
-        //    //win_REF_meldata = DeSerializeArray(lb_mfcc_files.Items[0].ToString());
-
-        //    //int result = H_FELDOLGOZO.hasonlit(ref win_REF_meldata,num_of_frames);
-
-        //    //MessageBox.Show(result.ToString());
-
-        //    sw.Stop();
-
-        //    this.Text = "DTW összehasonlítások az összes referenciára: " + sw.ElapsedMilliseconds.ToString() + " ms";
-
-        //    // elemezni a tömb dimenzióit, funkciókat
-
-        //    // a referenciákat tárolni kell valami fájlban, aztán beolvasni
-
-        //    // DTW algoritmus futtatása: 1. megnyitott WAV fájl és 10 másik REFERENCIA
-
-        //    //lb_dtw_data.Items.Add(H_FELDOLGOZO.hasonlit(ref ref_array, ref_array.Length).ToString());
-        //}
 
 
 

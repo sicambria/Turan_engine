@@ -142,11 +142,14 @@ namespace Turan_creator
         public static double[] fir_filter(double[] pcmdata)
         {
             double[] tmparray = new double[pcmdata.Length];
-            tmparray = pcmdata;
 
-            for (int i = 1; i < pcmdata.Length - 1; i++)
+            if (pcmdata.Length > 0)
             {
-                tmparray[i] = tmparray[i] - (0.95 * tmparray[i - 1]);
+                tmparray[0] = pcmdata[0];                 // y[0] = x[0]; no x[-1]
+            }
+            for (int i = 1; i < pcmdata.Length; i++)
+            {
+                tmparray[i] = pcmdata[i] - (0.95 * pcmdata[i - 1]);   // FIR: read ORIGINAL input
             }
             return tmparray;
         }
@@ -162,7 +165,7 @@ namespace Turan_creator
         {
             double[] tmparray = new double[firdata.Length];
 
-            for (int i = 0; i < firdata.Length - 1; i++)
+            for (int i = 0; i < firdata.Length; i++)
             {
                 tmparray[i] = (firdata[i] * (0.54 - (0.46 * Math.Cos((const_2pi * i) / num_items_in_windowed_frame))));
             }
@@ -199,15 +202,20 @@ namespace Turan_creator
             {
                 for (int frame_item = 0; frame_item < num_items_in_windowed_frame; frame_item++)
                 {
+                    // Pre-emphasis FIR: y[i] = x[i] - 0.95*x[i-1], read from the INPUT.
+                    // Frame-local: index 0 has no in-frame predecessor -> y[0] = x[0].
+                    double preemphasized;
                     if (frame_item == 0)
                     {
-                        tmparray[frame, frame_item] = tmparray[frame, frame_item] - (0.95 * tmparray[frame, 0]);
+                        preemphasized = win_pcmdata[frame, frame_item];
                     }
                     else
                     {
-                        tmparray[frame, frame_item] = tmparray[frame, frame_item] - (0.95 * tmparray[frame, frame_item - 1]);
+                        preemphasized = win_pcmdata[frame, frame_item] - (0.95 * win_pcmdata[frame, frame_item - 1]);
                     }
-                    tmparray[frame, frame_item] = (win_pcmdata[frame, frame_item] * (0.54 - (0.46 * Math.Cos((const_2pi * frame_item) / num_items_in_windowed_frame))));
+
+                    // Hamming window applied to the pre-emphasized sample.
+                    tmparray[frame, frame_item] = preemphasized * (0.54 - (0.46 * Math.Cos((const_2pi * frame_item) / num_items_in_windowed_frame)));
                 }
             }
             return tmparray;
@@ -216,6 +224,11 @@ namespace Turan_creator
 
         /// <summary>
         /// DCT végrehajtása, az mfccarr (globális) tömböt tölti fel
+        /// DEAD CODE (BUG-03): not called from anywhere. DO NOT wire in as-is — it is incompatible
+        /// with the live mel output: expects uint[,] (live = double[,]), 24 input bands (live = 15),
+        /// and writes mfccarr 1-based into a [num_items_in_windowed_frame, num_items_in_windowed_frame]
+        /// (~256x256) buffer (live frame layout differs). A correct DCT must be written fresh; see
+        /// plans/BUG-03.md §6.
         /// </summary>
         /// <param name="osszegek">The osszegek.</param>
         /// <param name="dbszam">The dbszam.</param>
@@ -269,108 +282,13 @@ namespace Turan_creator
                     {
                         mfccarr[kersz, m] = mfccarr[kersz, m] + (sumfloat[kersz, i] * Math.Cos((m * (i - 0.5) * Math.PI) / 24));
                     }
-                    mfccarr[kersz, m] = mfccarr[kersz, m] * (Math.Sqrt(2 / 24));
+                    mfccarr[kersz, m] = mfccarr[kersz, m] * (Math.Sqrt(2.0 / 24.0));
                 }
             }
         }
 
 
 
-        public static double[,] tavtomb = new double[256, mfcc_lpc_vect_num];
-        public static double[,] ertomb = new double[256, mfcc_lpc_vect_num];
-        public static int[] refcounters = new int[256];
-
-        public static int refcounter1 = 0;
-        public static int counter_ref = 0;
-        public static double[] mfccref1;
-        public static double[] mfccref2;
-        public static double[] mfccref3;
-        public static double[,] referencia;
-
-        public static byte Refs = 0;
-        public static double[] mfccrefs = new double[256];
-        // itt a paraméter a "mivel" :
-
-        public static int hasonlit(ref double[,] parameter, int count_param)
-        {
-            int result;
-            int seged1;
-            int seged2;
-            int i;
-            int j;
-            int indx;
-            double tmp = 0.0;
-            for (i = 0; i < 255; i++)
-            {
-                for (j = 0; j < mfcc_lpc_vect_num; j++)
-                {
-                    tavtomb[i, j] = -1;
-                    ertomb[i, j] = -1;
-                }
-            }
-            // --a távolságtömb feltöltése : --
-            for (i = 0; i < count_param; i++)
-            {
-                for (j = 0; j < mfcc_lpc_vect_num; j++)  //counter_ref
-                //for (j = 0; j < counter; j++)
-                {
-                    //tmp = 0.0;
-                    //for (indx = 1; indx <= Units.WavInit.mfccnum; indx++)
-                    //for (indx = 0; indx < Units.WavInit.mfccnum; indx++)
-                    for (indx = 0; indx < H_FELDOLGOZO.mfcc_lpc_vect_num; indx++)
-                    {
-                        tmp = tmp + (Math.Pow(Convert.ToDouble(parameter[i, indx] - referencia[j, indx]), 2));  // k=1-től N-ig SUM ( Xk - Yk )^2
-                        tavtomb[i, j] = tmp;
-                    }
-                }
-            }
-            // --az eredménytömb számítása : --
-            ertomb[0, 0] = tavtomb[0, 0];
-            seged1 = 0;
-            seged2 = 0;
-            while ((tavtomb[seged1 + 1, seged2] != -1) && (seged2 < num_items_in_windowed_frame - 1))
-            {
-                seged1++;
-                ertomb[seged1, seged2] = ertomb[seged1 - 1, seged2] + tavtomb[seged1, seged2];
-            }
-            seged1 = 0;
-            //while ((tavtomb[seged1, seged2 + 1] != -1) && (seged2 < 256))
-            while ((tavtomb[seged1, seged2] != -1) && (seged2 < mfcc_lpc_vect_num - 1))
-            {
-                seged2++;
-                ertomb[seged1, seged2] = ertomb[seged1, seged2 - 1] + tavtomb[seged1, seged2];
-            }
-            seged1 = 0;
-            seged2 = 0;
-            //while ((tavtomb[0, seged2 + 1] != -1) && (seged2 < 256))
-            while ((tavtomb[0, seged2] != -1) && (seged2 < mfcc_lpc_vect_num - 1))
-            {
-                seged1 = 0;
-                seged2++;
-                //while ((tavtomb[seged1 + 1, seged2] != -1) && (seged1 < 256))
-                while ((tavtomb[seged1, seged2] != -1) && (seged1 <= 255))
-                {
-                    seged1++;
-                    tmp = ertomb[seged1, seged2 - 1];
-                    // az aktuális fölötti elem
-                    if (ertomb[seged1 - 1, seged2 - 1] < tmp)
-                    {
-                        tmp = ertomb[seged1 - 1, seged2 - 1];
-                    }
-                    // atósan fölötti
-                    if (ertomb[seged1 - 1, seged2] < tmp)
-                    {
-                        tmp = ertomb[seged1 - 1, seged2];
-                    }
-                    // és mögötti...
-                    ertomb[seged1, seged2] = tavtomb[seged1, seged2] + tmp;
-                }
-            }
-            result = (int)Math.Round(ertomb[seged1, seged2]);
-            return result;
-        }
-
-        // end Comp
 
 
     }
