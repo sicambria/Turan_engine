@@ -3,7 +3,7 @@
 **Date:** 2026-06-27
 **Status:** Research (verified) + design proposal
 **Companion to:** `open_source_realtime_ASR_libraries_research_2026-06-27.md`
-**Provenance:** Part A is built from a focused deep-research run — 4 angles → 21 URLs → 16 fetched → **48 claims adversarially 3-vote verified, 46 confirmed, 2 killed**. Claims marked **[V]**; the 2 killed claims are excluded from the evidence (not cited as findings). Part B (design) is an engineering proposal, not verified fact. The reused components are all real OSS projects, but the **license labels in B.4 are from project documentation/memory and must be confirmed against each repo's LICENSE before building** (notably verify Elpis, WhisperX, DeepFilterNet, and the exact ffmpeg build).
+**Provenance:** Part A is built from a focused deep-research run — 4 angles → 21 URLs → 16 fetched → **48 claims adversarially 3-vote verified, 46 confirmed, 2 killed**. Claims marked **[V]**; the 2 killed claims are excluded from the evidence (not cited as findings). Part B (design) is an engineering proposal, not verified fact. The reused components are all real OSS projects, and the **license labels in A.2/B.4 were verified against each repo's actual LICENSE file on 2026-06-28** (16 projects checked). Verification surfaced three corrections now reflected in the tables: **WhisperTemple ships *no* license (all rights reserved — not legally reusable)**, **ffmpeg's base is LGPL-2.1+ with GPL only opt-in** (not GPL-by-default), and **DeepFilterNet is dual MIT-OR-Apache-2.0**. WhisperX is precisely **BSD-2-Clause**. All other labels matched. Software licenses can still change between releases — re-confirm at integration time.
 
 ---
 
@@ -28,7 +28,7 @@
 | **HF AutoTrain / AutoTrain Advanced** | ✅ genuine no-code web UI that trains **[V]** | ✅ but **ASR not supported** (text/LLM/image only; audio request closed stale Jul-2024; now deprecated) **[V]** | ❌ for ASR | Apache-2.0 | No ASR path; would require forking source **[V]**. |
 | **HF Whisper fine-tune** (blog/Colab) | ❌ code-driven Colab, `Seq2SeqTrainer` **[V]** | ✅ real fine-tune **[V]** | ✅ Whisper | Apache-2.0 | Must hand-write `prepare_dataset`, custom data collator, metrics **[V]**. |
 | **Mozilla.ai `speech-to-text-finetune` Blueprint** | ⚠️ Gradio GUI for **data collection + inference only** **[V]** | training is CLI Python + YAML edit **[V]** | ✅ Whisper (via HF) | Apache-2.0 | GUI does **not** cover the training step. |
-| **WhisperTemple** | ✅ local PyQt5 desktop GUI **[V]** | ❌ **annotation/data-prep only — does not train** **[V]** | Whisper inference (faster-whisper) | Open | Misleading name; builds datasets to train *elsewhere*. |
+| **WhisperTemple** | ✅ local PyQt5 desktop GUI **[V]** | ❌ **annotation/data-prep only — does not train** **[V]** | Whisper inference (faster-whisper) | **No license — all rights reserved** (repo `gongouveia/Whisper-Synthetic-ASR-Dataset-Generator` ships no LICENSE file; *not* legally reusable) | Misleading name; builds datasets to train *elsewhere*. **Cannot be forked/reused** as-is. |
 | **Picovoice Console** | ✅ GUI (New Model → name → language → Create) **[V]** | ❌ **vocabulary/word-boost only, no audio training** **[V]** | proprietary | Proprietary | Not data-driven training. |
 | **SpeechBrain / ESPnet (direct)** | ❌ code "recipe" system, PyTorch proficiency **[V]** | ✅ | ✅ | Apache-2.0 | Frameworks, not wizards. |
 
@@ -46,6 +46,8 @@
 ---
 
 # Part B — Design: "TalkTeach" — train a speech model so easily a 10-year-old can
+
+> **Implementation status (2026-06-28):** Part B is being built in a separate repo, **`speechrecog-teach`** (sibling to `Turan_engine`). **Phase 0 (spike) is complete and tested** — the FastAPI job server, the zero-config *director* (B.5), the audio quality/sufficiency loop, the SQLite data layer, reliability pre-flight (B.7), the engine adapter, and a four-screen Svelte/Tauri scaffold (B.2–B.3), with **57 passing tests** and a live-booting backend. Real LoRA training, ffmpeg/VAD, and a compiled desktop shell are Phase 1. See that repo's `docs/PHASE0_STATUS.md`.
 
 > **Design goal (literal):** a smart 10-year-old, with no help and no jargon, can teach a computer to understand a chosen voice/language and end up with a working, exportable model — in under an hour, offline, on Windows/macOS/Linux, without a single config file, and without being able to break it.
 
@@ -100,7 +102,7 @@
 └───────────────────────────────────────────────────────────────┘
 ```
 
-## B.4 Reuse map — don't reinvent (licenses per project docs; **confirm before building**)
+## B.4 Reuse map — don't reinvent (licenses verified against each repo's LICENSE on 2026-06-28)
 
 | Need | Reuse (don't build) | License | How it's used |
 |---|---|---|---|
@@ -111,11 +113,11 @@
 | Low-resource engine | **SpeechBrain / fairseq wav2vec2** | Apache-2.0/MIT | wav2vec2-CTC on tiny data |
 | Auto-draft transcripts + "Try it" | **faster-whisper (CTranslate2)** | MIT | Fast CPU/GPU inference |
 | Voice activity / auto-trim | **Silero VAD** | MIT | Trim silence, auto-segment |
-| Forced alignment / segmentation | **NeMo Forced Aligner**, **WhisperX** | Apache-2.0 / BSD | Split long audio into sentence clips |
-| Audio I/O & resample (16 kHz) | **ffmpeg**, **sox**, **torchaudio** | LGPL/**GPL** / GPL / BSD | Subprocess (see B.6) |
+| Forced alignment / segmentation | **NeMo Forced Aligner**, **WhisperX** | Apache-2.0 / **BSD-2-Clause** | Split long audio into sentence clips |
+| Audio I/O & resample (16 kHz) | **ffmpeg**, **sox**, **torchaudio** | **ffmpeg LGPL-2.1+ base (GPL only if `--enable-gpl`)** / sox GPL / torchaudio BSD | Subprocess (see B.6) |
 | Audio quality metrics | **librosa** | ISC | Clipping/SNR/silence checks |
 | Optional rich correction UI | **Label Studio** | Apache-2.0 | Embeddable, or build a simpler tapper |
-| Noise cleanup (optional) | **Demucs / DeepFilterNet** | MIT / **(DFN: MIT)** | Auto-denoise noisy uploads |
+| Noise cleanup (optional) | **Demucs / DeepFilterNet** | MIT / **MIT OR Apache-2.0** (DFN dual-licensed; model weights may carry separate terms) | Auto-denoise noisy uploads |
 | Deployment/export runtime | **sherpa-onnx** | Apache-2.0 | Export streaming ONNX + tiny runnable app |
 | Reliable env bundling | **uv** + **conda-pack/PyInstaller** | Apache/MIT | No-install Python runtime |
 | Prompt sentences per language | **Common Voice** sentence sets | CC0 | Karaoke read-aloud prompts |
@@ -125,7 +127,7 @@
 
 ## B.5 The "director" — zero-config intelligence (the real IP)
 
-A rules+heuristics module that removes every decision from the user:
+A rules+heuristics module that removes every decision from the user. **The specific thresholds and hyperparameters below are proposed design defaults — sensible starting points drawn from the LoRA/Whisper literature, not empirically tuned for this app. They must be validated and calibrated against real hardware and datasets during Phase 0–1 (treat them as the *initial* policy the director ships with, then refine from telemetry).**
 
 - **Hardware probe** → choose engine + model size + precision + batch size. (≥16 GB VRAM → Parakeet/medium; 6–16 GB → Whisper-small LoRA fp16; CPU-only → Whisper-tiny LoRA int8 / offer cloud.)
 - **Data probe** → set epochs, LR, warmup, and early-stop patience from dataset minutes (LoRA defaults: rank 8–16, LR 1e-4, cosine, early-stop on val WER). Tiny data → freeze encoder, train head + LoRA only.
@@ -137,7 +139,7 @@ A rules+heuristics module that removes every decision from the user:
 
 The user permits GPL. Two safe patterns so a GPL dependency doesn't force the *whole* product's license unexpectedly:
 
-- **Aggregation via subprocess (preferred):** invoke GPL/LGPL CLI tools (**ffmpeg**, **sox**) as *separate processes*, not linked libraries. This is "mere aggregation" — it keeps the core app's license flexible while still shipping the binaries.
+- **Aggregation via subprocess (preferred):** invoke copyleft CLI tools (**sox**, GPL; **ffmpeg**, LGPL-base) as *separate processes*, not linked libraries. This is "mere aggregation" — it keeps the core app's license flexible while still shipping the binaries.
 - **If you want a fully-permissive product:** prefer LGPL/MIT/Apache builds (ffmpeg LGPL build without GPL codecs; torchaudio for resampling) and isolate any GPL piece.
 - **If you embrace GPL for the whole app:** simplest legally — license **TalkTeach itself as GPL-3.0**, then any GPL component (e.g., a GPL forced-aligner or a GPL ffmpeg build) can be linked freely. Given the user's explicit "GPL is fine," **defaulting the app to GPL-3.0 and reusing freely is the fastest, lowest-friction path** — document it in `LICENSE` and an NOTICE/credits screen.
 - **Always ship** a third-party-licenses screen (auto-generated) — many reused projects (Apache/BSD/MIT) require attribution.
@@ -172,6 +174,18 @@ The user permits GPL. Two safe patterns so a GPL dependency doesn't force the *w
 ## B.10 One-paragraph pitch
 
 **TalkTeach** is a free, offline, cross-platform desktop app that turns the fragmented OSS speech-training stack (Whisper, NeMo, SpeechBrain, faster-whisper, Silero VAD, sherpa-onnx, Elpis) into a single four-tap wizard — *Record, Check, Teach, Try* — with all ML decisions made automatically by a hardware-and-data-aware "director," guardrails that make it impossible to start a doomed run, and bundled dependencies that remove install pain. It closes the exact gap the 2026 landscape leaves open: **a child-proof, reliable, open-source GUI that actually trains state-of-the-art models end-to-end.**
+
+---
+
+# Part C — Where this could be wrong (limitations & the strongest counterargument)
+
+Intellectual honesty about what would invalidate the headline finding and the design:
+
+- **Landscape currency.** Part A is a snapshot dated 2026-06-27. This space moves monthly: HF AutoTrain's audio support could be revived, Elpis could add a Whisper backend, NeMo/Mozilla.ai could ship a real GUI trainer, or a new entrant could appear. **Re-verify the "no end-to-end OSS GUI for SOTA models" headline before quoting it** more than a few months out — it is the claim most exposed to becoming false.
+- **The strongest counterargument to the headline.** A skeptic could argue the gap is *intentional*, not an oversight: SOTA ASR fine-tuning is genuinely hard to make zero-config and reliable across arbitrary hardware/languages, which is exactly why no one has shipped it. If that's true, the hard part isn't the UX shell (the 85% reuse) — it's the **director + reliability engineering (the 15%)**, and that 15% may be most of the actual risk and effort. The build plan should be read with that weighting: Phase 0's real purpose is to de-risk the director and the dependency-bundling, not the wizard.
+- **Reuse percentage is an estimate.** "~85% reused OSS" is an engineering judgment, not a measured figure; integration glue, packaging, and the director can easily dominate real effort even if they are a minority of the line count.
+- **Two claims in Part A are time-sensitive product states** (TAO being vision-only; AutoTrain being deprecated/ASR-less). These are the first things to re-check — vendor roadmaps change.
+- **Part B is unbuilt.** No code exists yet; the architecture, director policy, and reliability claims are design intent that Phase 0 must empirically validate. Nothing in Part B has been benchmarked.
 
 ---
 
