@@ -1,49 +1,45 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Felismero_motor
 {
+    // package comirva.audio.util;
+    //
+    // Provenance: Java->C# port of Klaus Seyerlehner's CoMIRVA
+    // comirva.audio.util.MFCC (depends on the ported Matrix.cs and FFT.cs in
+    // this folder).
+    //
+    // UNUSED - not part of any build. See README.md in this folder.
+    // Code-review-verified, NOT compiler-verified.
+
+    /**
+     * <b>Mel Frequency Cepstrum Coefficients - MFCCs</b>
+     *
+     * <p>Description: </p>
+     * Computes the MFCC representation of a pcm signal. The signal is cut into
+     * short overlapping frames, and for each frame, a feature vector is is computed,
+     * which consists of Mel Frequency Cepstrum Coefficients.<br>
+     * The cepstrum is the inverse Fourier transform of the log-spectrum. We call
+     * mel-cepstrum the cepstrum computed after a non-linear frequency wrapping onto
+     * a perceptual frequency scale, the Mel-frequency scale. Since it is a inverse
+     * Fourier transform, the resulting coefficients are called Mel frequency
+     * cepstrum coefficients (MFCC). Only the first few coefficients are used to
+     * represent a frame. The number of coefficients is a an important parameter.
+     * Therefore MFCCs provide a low-dimensional, smoothed version of the log
+     * spectrum, and thus are a good and compact representation of the spectral shape.
+     * They are widely used as features for speech recognition, and have also proved
+     * useful in music instrument recognition [1].<br>
+     *<br>
+     * [1] Aucouturier, Pachet "Improving Trimbre Similarity: How high's the sky?",
+     *     in Journal of Negative Results in Speech and Audio Sciences, 1(1), 2004.
+     *
+     *
+     * @author Klaus Seyerlehner
+     * @version 1.0
+     */
     class MFCC
     {
-
-
-        //        package comirva.audio.util;
-
-        //import java.util.Vector;
-        //import java.io.IOException;
-
-        //import comirva.audio.util.math.Matrix;
-
-        /**
-         * <b>Mel Frequency Cepstrum Coefficients - MFCCs</b>
-         *
-         * <p>Description: </p>
-         * Computes the MFCC representation of a pcm signal. The signal is cut into
-         * short overlapping frames, and for each frame, a feature vector is is computed,
-         * which consists of Mel Frequency Cepstrum Coefficients.<br>
-         * The cepstrum is the inverse Fourier transform of the log-spectrum. We call
-         * mel-cepstrum the cepstrum computed after a non-linear frequency wrapping onto
-         * a perceptual frequency scale, the Mel-frequency scale. Since it is a inverse
-         * Fourier transform, the resulting coefficients are called Mel frequency
-         * cepstrum coefficients (MFCC). Only the first few coefficients are used to
-         * represent a frame. The number of coefficients is a an important parameter.
-         * Therefore MFCCs provide a low-dimensional, smoothed version of the log
-         * spectrum, and thus are a good and compact representation of the spectral shape.
-         * They are widely used as features for speech recognition, and have also proved
-         * useful in music instrument recognition [1].<br>
-         *<br>
-         * [1] Aucouturier, Pachet "Improving Trimbre Similarity: How high's the sky?",
-         *     in Journal of Negative Results in Speech and Audio Sciences, 1(1), 2004.
-         *
-         *
-         * @author Klaus Seyerlehner
-         * @version 1.0
-         */
-        //public class MFCC
-        //{
-
-
         //general fields
         protected int windowSize;
         protected int hopSize;
@@ -63,11 +59,8 @@ namespace Felismero_motor
         private double[] inputData;
         private double[] buffer;
 
-
-        //private Matrix dctMatrix;
-        //private Matrix melFilterBanks;
-
-
+        private Matrix dctMatrix;
+        private Matrix melFilterBanks;
 
         private FFT normalizedPowerFFT;
         private double scale;
@@ -81,11 +74,11 @@ namespace Felismero_motor
          *
          * @param sampleRate float samples per second, must be greater than zero; not
          *                         whole-numbered values get rounded
-         * @throws IllegalArgumentException raised if method contract is violated
+         * @throws ArgumentException raised if method contract is violated
          */
         public MFCC(float sampleRate)
+            : this(sampleRate, 512, 20, true, 20.0, 16000.0, 40)
         {
-            this(sampleRate, 512, 20, true, 20.0, 16000.0, 40);
         }
 
 
@@ -101,11 +94,11 @@ namespace Felismero_motor
          * @param useFirstCoefficient boolean indicates whether the first coefficient
          *                                    of the dct process should be used in the
          *                                    mfcc feature vector or not
-         * @throws IllegalArgumentException raised if method contract is violated
+         * @throws ArgumentException raised if method contract is violated
          */
         public MFCC(float sampleRate, int windowSize, int numberCoefficients, bool useFirstCoefficient)
+            : this(sampleRate, windowSize, numberCoefficients, useFirstCoefficient, 20.0, 16000.0, 40)
         {
-            this(sampleRate, windowSize, numberCoefficients, useFirstCoefficient, 20.0, 16000.0, 40);
         }
 
         /**
@@ -123,41 +116,41 @@ namespace Felismero_motor
          * @param minFreq double start of the interval to place the mel-filters in
          * @param maxFreq double end of the interval to place the mel-filters in
          * @param numberFilters int number of mel-filters to place in the interval
-         * @throws IllegalArgumentException raised if method contract is violated
+         * @throws ArgumentException raised if method contract is violated
          */
         public MFCC(float sampleRate, int windowSize, int numberCoefficients, bool useFirstCoefficient, double minFreq, double maxFreq, int numberFilters)
         {
             //check for correct window size
             if (windowSize < 32)
             {
-                throw new IllegalArgumentException("window size must be at least 32");
+                throw new ArgumentException("window size must be at least 32");
             }
             else
             {
                 int i = 32;
-                while (i < windowSize && i < Integer.MAX_VALUE)
+                while (i < windowSize && i < int.MaxValue)
                     i = i << 1;
 
                 if (i != windowSize)
-                    throw new IllegalArgumentException("window size must be 2^n");
+                    throw new ArgumentException("window size must be 2^n");
             }
 
             //check sample rate
-            sampleRate = Math.round(sampleRate);
+            sampleRate = (float)Math.Round((double)sampleRate);
             if (sampleRate < 1)
-                throw new IllegalArgumentException("sample rate must be at least 1");
+                throw new ArgumentException("sample rate must be at least 1");
 
             //check numberFilters
             if (numberFilters < 2 || numberFilters > (windowSize / 2) + 1)
-                throw new IllegalArgumentException("number filters must be at least 2 and smaller than the nyquist frequency");
+                throw new ArgumentException("number filters must be at least 2 and smaller than the nyquist frequency");
 
             //check numberCoefficients
             if (numberCoefficients < 1 || numberCoefficients >= numberFilters)
-                throw new IllegalArgumentException("the number of coefficients must be greater or equal to 1 and samller than the number of filters");
+                throw new ArgumentException("the number of coefficients must be greater or equal to 1 and samller than the number of filters");
 
             //check minFreq/maxFreq
             if (minFreq <= 0 || minFreq > maxFreq || maxFreq > 88200.0f)
-                throw new IllegalArgumentException("the min. frequency must be greater 0 smaller than the max. frequency, which must be smaller than 88200.0"); ;
+                throw new ArgumentException("the min. frequency must be greater 0 smaller than the max. frequency, which must be smaller than 88200.0");
 
             this.sampleRate = sampleRate;
             this.windowSize = windowSize;
@@ -183,7 +176,7 @@ namespace Felismero_motor
             normalizedPowerFFT = new FFT(FFT.FFT_NORMALIZED_POWER, windowSize, FFT.WND_HANNING);
 
             //compute rescale factor to rescale and normalize at once (default is 96dB = 2^16)
-            scale = (Math.pow(10, 96 / 20));
+            scale = (Math.Pow(10, 96 / 20));
         }
 
 
@@ -261,7 +254,7 @@ namespace Felismero_motor
             }
 
             //create the filter bank matrix
-            double[,] matrix = new double[numberFilters][];
+            double[][] matrix = new double[numberFilters][];
 
             //fill each row of the filter bank matrix with one triangular mel filter
             for (int i = 1; i <= numberFilters; i++)
@@ -353,7 +346,7 @@ namespace Felismero_motor
          */
         private double melToLinFreq(double inputFreq)
         {
-            return (700.0 * (Math.pow(10.0, (inputFreq / 2595.0)) - 1.0));
+            return (700.0 * (Math.Pow(10.0, (inputFreq / 2595.0)) - 1.0));
         }
 
 
@@ -383,9 +376,9 @@ namespace Felismero_motor
                 for (int j = 0; j < numberFilters; j++)
                 {
                     if (i == 0)
-                        matrix.set(i, j, w1 * Math.cos(k * i * (j + 0.5d)));
+                        matrix.set(i, j, w1 * Math.Cos(k * i * (j + 0.5d)));
                     else
-                        matrix.set(i, j, w2 * Math.cos(k * i * (j + 0.5d)));
+                        matrix.set(i, j, w2 * Math.Cos(k * i * (j + 0.5d)));
                 }
             }
 
@@ -404,52 +397,40 @@ namespace Felismero_motor
          * @param in AudioPreProcessor input data is a complete Audio stream, must
          *                             have the same sample rate like this sone object,
          *                             must not be a null value
-         * @return Vector this vector contains a double array of Sone value for each
+         * @return List this list contains a double array of Sone value for each
          *                window
-         * @throws IOException if there are any problems regarding the inputstream
-         * @throws IllegalArgumentException raised if method contract is violated
+         * @throws ArgumentException raised if method contract is violated
          */
-
-        //public Vector<double[]> process(AudioPreProcessor invector)
         public List<double[]> process(AudioPreProcessor invector)
         {
-            //check invector
-            if (invector == null)
-            {
-                //throw new Exception("the audio preprocessor must not be a null value");
-            }
-
-            //check for correct input format
-            // if(invector.getSampleRate() != sampleRate)
-            //     throw new Exception IllegalArgumentException("sample rates of inputstream differs from sample rate of the sone processor");
-
-            //create vector holding the mfcc vector of each frame
-            //Vector<double[]> mfcc = new Vector<double[]>();
-            List<double[]> mfcc = new Vector<double[]>();
-
-
-            //read whole window
-            int samplesRead = invector.append(inputData, 0, windowSize);
-
-            if (samplesRead == windowSize)
-            {
-                //process all other frames
-                samplesRead = hopSize;
-                while (samplesRead == hopSize)
-                {
-                    //process the current window
-                    mfcc.add(processWindow(inputData, 0));
-
-                    //move data in window (overleap)
-                    for (int i = hopSize, j = 0; i < windowSize; j++, i++)
-                        inputData[j] = inputData[i];
-
-                    //read new data
-                    samplesRead = invector.append(inputData, windowSize - hopSize, hopSize);
-                }
-            }
-
-            return mfcc;
+            // TODO: wire AudioPreProcessor.
+            // The LITE-tree AudioPreProcessor is currently an empty stub that does
+            // not expose append(double[], int, int). Until it provides that method
+            // this streaming overload cannot be wired. The process(double[]) overload
+            // below is the fully-working path used by the mel/DCT pipeline.
+            //
+            // Original CoMIRVA streaming pipeline (restore once AudioPreProcessor
+            // exposes append(double[], int, int)):
+            //
+            //   if (invector == null)
+            //       throw new ArgumentException("the audio preprocessor must not be a null value");
+            //
+            //   List<double[]> mfcc = new List<double[]>();
+            //
+            //   int samplesRead = invector.append(inputData, 0, windowSize);
+            //   if (samplesRead == windowSize)
+            //   {
+            //       samplesRead = hopSize;
+            //       while (samplesRead == hopSize)
+            //       {
+            //           mfcc.Add(processWindow(inputData, 0));
+            //           for (int i = hopSize, j = 0; i < windowSize; j++, i++)
+            //               inputData[j] = inputData[i];
+            //           samplesRead = invector.append(inputData, windowSize - hopSize, hopSize);
+            //       }
+            //   }
+            //   return mfcc;
+            throw new NotImplementedException("process(AudioPreProcessor) requires AudioPreProcessor.append(double[], int, int); see TODO.");
         }
 
         /**
@@ -459,29 +440,33 @@ namespace Felismero_motor
          *
          * @param input double[] input data is an array of samples, must be a multiple
          *                       of the hop size, must not be a null value
-         * @return double[][] an array of arrays contains a double array of Sone value
+         * @return double[,] an array of arrays contains a double array of Sone value
          *                    for each window
-         * @throws IOException if there are any problems regarding the inputstream
-         * @throws IllegalArgumentException raised if method contract is violated
+         * @throws ArgumentException raised if method contract is violated
          */
-
-        public double[,] process(double[] input) //throws IllegalArgumentException, IOException
+        public double[,] process(double[] input)
         {
             //check for null
             if (input == null)
-                throw new IllegalArgumentException("input data must not be a null value");
+                throw new ArgumentException("input data must not be a null value");
 
             //check for correct array Length
             if ((input.Length % hopSize) != 0)
-                throw new IllegalArgumentException("Input data must be multiple of hop size (windowSize/2).");
+                throw new ArgumentException("Input data must be multiple of hop size (windowSize/2).");
 
             //create return array with appropriate size
-            //double[][] mfcc = new double[(input.Length/hopSize)-1][numberCoefficients];
             double[,] mfcc = new double[(input.Length / hopSize) - 1, numberCoefficients];
 
             //process each window of this audio segment
             for (int i = 0, pos = 0; pos < input.Length - hopSize; i++, pos += hopSize)
-                mfcc[i] = processWindow(input, pos);
+            {
+                //rectangular assignment is illegal in C#: copy the returned row into
+                //the i-th row of the return matrix.
+                double[] row = processWindow(input, pos);
+                int cols = Math.Min(row.Length, numberCoefficients);
+                for (int c = 0; c < cols; c++)
+                    mfcc[i, c] = row[c];
+            }
 
             return mfcc;
         }
@@ -513,21 +498,20 @@ namespace Felismero_motor
          *                        one window
          * @param start int start index of the window data
          * @return double[] the window representation in Sone
-         * @throws IllegalArgumentException raised if method contract is violated
+         * @throws ArgumentException raised if method contract is violated
          */
-
-        public double[] processWindow(double[] window, int start) //throws IllegalArgumentException
+        public double[] processWindow(double[] window, int start)
         {
             //number of unique coefficients, and the rest are symmetrically redundant
             int fftSize = (windowSize / 2) + 1;
 
             //check start
             if (start < 0)
-                throw new IllegalArgumentException("start must be a positve value");
+                throw new ArgumentException("start must be a positve value");
 
             //check window size
             if (window == null || window.Length - start < windowSize)
-                throw new IllegalArgumentException("the given data array must not be a null value and must contain data for one window");
+                throw new ArgumentException("the given data array must not be a null value and must contain data for one window");
 
             //just copy to buffer and rescaled the input samples according to the original matlab implementation to 96dB
             for (int j = 0; j < windowSize; j++)
@@ -544,7 +528,7 @@ namespace Felismero_motor
             x = melFilterBanks.times(x);
 
             //to db
-            double Log10 = 10 * (1 / Math.Log(10)); // log for base 10 and scale by factor 10
+            double log10 = 10 * (1 / Math.Log(10)); // log for base 10 and scale by factor 10
             x.thrunkAtLowerBoundary(1);
             x.logEquals();
             x.timesEquals(log10);
@@ -553,15 +537,6 @@ namespace Felismero_motor
             x = dctMatrix.times(x);
 
             return x.getColumnPackedCopy();
-
-
         }
-
-
     }
 }
-
-
-
-
-
