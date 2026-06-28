@@ -1,8 +1,33 @@
-Turán RMS (Recognition Made Simple) 
+================================================================
+  ARCHIVED PROJECT
+================================================================
+This repository is archived and kept for historical reference.
+It is no longer actively developed.
+
+For more advanced solutions and an easy-to-use training wizard,
+see the successor project:
+
+    https://github.com/sicambria/speechrecog-teach
+
+================================================================
+
+Turán RMS (Recognition Made Simple)
 GNU General Public Licence (GNU GPL) v3
 
 https://github.com/sicambria
 sicambria@users.sourceforge.net
+-------------------------------------------------------
+Recent changes (high level)
+-------------------------------------------------------
+-Fixed correctness bugs in the recognition core: unified the DTW
+ feature-vector width, added a rejection sentinel, and repaired
+ the HTK feature-file reader.
+-Repaired DSP math: restored pre-emphasis, corrected signal
+ processing, and removed dead native code paths.
+-Completed and quarantined a CoMIRVA-based native MFCC port as
+ unused reference material.
+-Verified the bundled licenses and documented the project's
+ limitations.
 -------------------------------------------------------
 v1.0
 2011-01-03
