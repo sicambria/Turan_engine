@@ -4,10 +4,16 @@
 This repository is archived and kept for historical reference.
 It is no longer actively developed.
 
-For more advanced solutions and an easy-to-use training wizard,
-see the successor project:
+Two successor projects carry these ideas forward:
 
-    https://github.com/sicambria/speechrecog-teach
+  TalkTeach ASR - offline, cross-platform desktop app with an
+  easy-to-use training wizard for state-of-the-art ASR models:
+    https://github.com/sicambria/talkteach-asr
+
+  SpeechAngel - on-device, trainable, language-independent voice
+  control for Android (speaker-dependent MFCC + DTW matching, the
+  direct descendant of Turan), built for accessibility:
+    https://github.com/sicambria/speechangel
 
 ================================================================
 

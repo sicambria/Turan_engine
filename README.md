@@ -4,11 +4,21 @@
 > developed**. The code targets the .NET Framework / WinForms era (2011–2015)
 > and is Windows-only.
 >
-> ### ➡️ Looking for the active project?
-> ### **[github.com/sicambria/speechrecog-teach](https://github.com/sicambria/speechrecog-teach)**
+> ### ➡️ Looking for the active projects?
 >
-> The successor repository contains **more advanced solutions and an
-> easy-to-use training wizard**. Start there for new work.
+> Two successor projects carry these ideas forward:
+>
+> - **[TalkTeach ASR](https://github.com/sicambria/talkteach-asr)** — an
+>   easy-to-use, offline, cross-platform desktop app that trains
+>   state-of-the-art ASR models end-to-end through a four-step
+>   *Record → Check → Teach → Try* wizard (Whisper-LoRA fine-tuning, ~99
+>   languages, no ML expertise required). **Start here for the modern training
+>   wizard and more advanced solutions.**
+> - **[SpeechAngel](https://github.com/sicambria/speechangel)** — on-device,
+>   trainable, language-independent voice control for **Android**, built for
+>   people who cannot use their hands and whose speech may be atypical. It is
+>   the direct spiritual descendant of Turán: speaker-dependent **MFCC + DTW**
+>   acoustic template matching, fully offline, no language model.
 
 ---
 
@@ -19,7 +29,8 @@
 [![Language: C#](https://img.shields.io/badge/language-C%23-178600.svg)](#)
 [![Platform: Windows](https://img.shields.io/badge/platform-Windows-0078D6.svg)](#)
 [![Framework: .NET Framework](https://img.shields.io/badge/.NET-Framework-512BD4.svg)](#)
-[![Successor: speechrecog-teach](https://img.shields.io/badge/successor-speechrecog--teach-brightgreen.svg)](https://github.com/sicambria/speechrecog-teach)
+[![Successor: TalkTeach ASR](https://img.shields.io/badge/successor-TalkTeach_ASR-brightgreen.svg)](https://github.com/sicambria/talkteach-asr)
+[![Successor: SpeechAngel](https://img.shields.io/badge/successor-SpeechAngel-brightgreen.svg)](https://github.com/sicambria/speechangel)
 
 A speaker-dependent, isolated-word (command) **speech recognition engine** for
 Windows, written in C#. It captures audio, extracts acoustic features
