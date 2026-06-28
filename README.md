@@ -14,6 +14,13 @@
 
 # Turán RMS — *Recognition Made Simple*
 
+[![Status: Archived](https://img.shields.io/badge/status-archived-lightgrey.svg)](#-this-project-is-archived)
+[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENCE-GPL3.TXT)
+[![Language: C#](https://img.shields.io/badge/language-C%23-178600.svg)](#)
+[![Platform: Windows](https://img.shields.io/badge/platform-Windows-0078D6.svg)](#)
+[![Framework: .NET Framework](https://img.shields.io/badge/.NET-Framework-512BD4.svg)](#)
+[![Successor: speechrecog-teach](https://img.shields.io/badge/successor-speechrecog--teach-brightgreen.svg)](https://github.com/sicambria/speechrecog-teach)
+
 A speaker-dependent, isolated-word (command) **speech recognition engine** for
 Windows, written in C#. It captures audio, extracts acoustic features
 (LPC or MFCC), and recognizes spoken commands by **Dynamic Time Warping (DTW)
